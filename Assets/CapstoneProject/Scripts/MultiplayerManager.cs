@@ -25,7 +25,6 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     CanvasGroup LobbyMenu;
     CanvasGroup RoomMenu;
     Button ManualCreateButton;
-    Button AutoCreateButton;
     Button ManualJoinButton;
     Button AutoJoinButton;
     Button ChangeNameButton;
@@ -67,7 +66,6 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         MultiplayerStatus[3] = GameObject.Find("Player4Status").GetComponent<TextMeshProUGUI>();
 
         ManualCreateButton = GameObject.Find("CreateRoom").GetComponent<Button>();
-        AutoCreateButton = GameObject.Find("AutoCreateRoom").GetComponent<Button>();
         ManualJoinButton = GameObject.Find("JoinRoom").GetComponent<Button>();
         AutoJoinButton = GameObject.Find("JoinRandom").GetComponent<Button>();
         ChangeNameButton = GameObject.Find("ChangeName").GetComponent<Button>();
@@ -158,23 +156,15 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
     public void RoomMake()
     {
-        CurrentRoomName = "Room ID: " + CreateRoomID;
+        CurrentRoomName = CreateRoomID;
         Debug.Log("Generating room: " + CurrentRoomName);
         PhotonNetwork.CreateRoom(CurrentRoomName, MultiplayerOptions);
     }
 
     public void RoomJoin()
     {
-        CurrentRoomName = "Room ID: " + JoinRoomID;
+        CurrentRoomName = JoinRoomID;
         PhotonNetwork.JoinRoom(CurrentRoomName);
-    }
-
-    public void RandomRoomMake()
-    {
-        RoomID = Random.Range(0, 100000);
-        CurrentRoomName = "Room ID: " + RoomID;
-        Debug.Log("Generating room: "+ CurrentRoomName);
-        PhotonNetwork.CreateRoom(CurrentRoomName, MultiplayerOptions);
     }
 
     public void RoomScan()

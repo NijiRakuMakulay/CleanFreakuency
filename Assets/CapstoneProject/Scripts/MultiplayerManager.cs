@@ -1,7 +1,10 @@
-using UnityEngine;
 using Photon.Pun;
-using TMPro;
 using Photon.Realtime;
+using System.Collections.Generic;
+using System;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.UI;
 public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
@@ -12,10 +15,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     string CurrentRoomName;
     string CreateRoomID;
     string JoinRoomID;
+    int playerIndex;
+
+    //UI Variables
     TextMeshProUGUI ConnectingText;
     TextMeshProUGUI TitleText;
     TextMeshProUGUI LocalPlayerText;
-    int playerIndex;
     TextMeshProUGUI[] MultiplayerText;
     TextMeshProUGUI[] MultiplayerStatus;
     TextMeshProUGUI CreateIDEntry;
@@ -28,14 +33,19 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     Button ManualJoinButton;
     Button AutoJoinButton;
     Button ChangeNameButton;
+    //ScrollRect RoomLog;
+    string room_msglog;
+    TextMeshProUGUI RoomLogText;
+    List<string> LogList = new List<string>();
 
     void Awake()
     {
         CurrentRoomName = "";
         PhotonNetwork.AutomaticallySyncScene = true;
-        PlayerID = Random.Range(0, 9999999);
+        PlayerID = UnityEngine.Random.Range(0, 9999999);
         username = "Player" + PlayerID;
         PhotonNetwork.NickName = username;
+        #region LobbyMenu CanvasGroup
         ConnectingText = GameObject.Find("ConnectingState").GetComponent<TextMeshProUGUI>();
         TitleText = GameObject.Find("MPMan_TitleText").GetComponent<TextMeshProUGUI>();
         LocalPlayerText = GameObject.Find("YourName").GetComponent<TextMeshProUGUI>();
@@ -49,26 +59,32 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         LobbyMenu.alpha = 0.0f;
         LobbyMenu.interactable = false;
         LobbyMenu.blocksRaycasts = false;
+        #endregion
+        #region RoomMenu CanvasGroup
         RoomMenu.alpha = 0.0f;
         RoomMenu.interactable = false;
         RoomMenu.blocksRaycasts = false;
-
+        //Gets text objects for the room screen
         MultiplayerText = new TextMeshProUGUI[4];
         MultiplayerText[0] = GameObject.Find("Player1Text").GetComponent<TextMeshProUGUI>();
         MultiplayerText[1] = GameObject.Find("Player2Text").GetComponent<TextMeshProUGUI>();
         MultiplayerText[2] = GameObject.Find("Player3Text").GetComponent<TextMeshProUGUI>();
         MultiplayerText[3] = GameObject.Find("Player4Text").GetComponent<TextMeshProUGUI>();
-
+        //Gets text objects for the room screen
         MultiplayerStatus = new TextMeshProUGUI[4];
         MultiplayerStatus[0] = GameObject.Find("Player1Status").GetComponent<TextMeshProUGUI>();
         MultiplayerStatus[1] = GameObject.Find("Player2Status").GetComponent<TextMeshProUGUI>();
         MultiplayerStatus[2] = GameObject.Find("Player3Status").GetComponent<TextMeshProUGUI>();
         MultiplayerStatus[3] = GameObject.Find("Player4Status").GetComponent<TextMeshProUGUI>();
-
+        //Gets buttons from the scene
         ManualCreateButton = GameObject.Find("CreateRoom").GetComponent<Button>();
         ManualJoinButton = GameObject.Find("JoinRoom").GetComponent<Button>();
         AutoJoinButton = GameObject.Find("JoinRandom").GetComponent<Button>();
         ChangeNameButton = GameObject.Find("ChangeName").GetComponent<Button>();
+        //Gets room log object
+        //RoomLog = GameObject.Find("RoomLog").GetComponent<ScrollRect>();
+        RoomLogText = GameObject.Find("RoomLogText").GetComponent<TextMeshProUGUI>();
+        #endregion
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -123,6 +139,16 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     MultiplayerStatus[playerIndex].text = "PRESENT";
                     playerIndex++;
                 }
+                room_msglog = "";
+                if (LogList.Count >= 50)
+                {
+                    LogList.RemoveAt(0);
+                }
+                foreach (string msg in LogList)
+                {
+                    room_msglog = room_msglog + string.Format("\n{0} - {1}", LogList.IndexOf(msg), msg);
+                    RoomLogText.text=(room_msglog);
+                }
             }
         }
         else
@@ -175,6 +201,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
     public void RoomExit()
     {
+        LogList.Clear();
         PhotonNetwork.LeaveRoom();
         CurrentRoomName = "";
     }
@@ -214,9 +241,22 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        string InitialEntryMSG = "[" + DateTime.Now.ToString() + "] Hello, " + newPlayer.NickName + "! [" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        LogList.Add(InitialEntryMSG);
+    }
+
+    public override void OnPlayerLeftRoom(Player other)
+    {
+        string InitialEntryMSG = "[" + DateTime.Now.ToString() + "] See you again, " + other.NickName + "! [" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        LogList.Add(InitialEntryMSG);
+    }
+
     public override void OnJoinedRoom()
     {
-        Debug.Log("You're in: " + PhotonNetwork.CurrentRoom.Name + "[" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]");
+        string InitialEntryMSG = "[" + DateTime.Now.ToString() + "] You're in: " + PhotonNetwork.CurrentRoom.Name + "[" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        LogList.Add(InitialEntryMSG);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -224,6 +264,11 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         if(message == "Game does not exist")
         {
             LobbyMessage.text = string.Format("[{0}] Where is that room? We don't have that yet! Can you please try creating THAT room instead?", message);
+            Debug.LogError(LobbyMessage.text);
+        }
+        else if (message == "Game full")
+        {
+            LobbyMessage.text = string.Format("[{0}] That room is fully occupied. Now, it's your turn to create your own room!", message);
             Debug.LogError(LobbyMessage.text);
         }
         else
@@ -237,7 +282,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         if (message == "No match found")
         {
-            LobbyMessage.text = string.Format("[{0}] Where is that room? We don't have that yet! Can you please try creating THAT room instead?", message);
+            LobbyMessage.text = string.Format("[{0}] Let's try creating a room. You're the only one vacant here.", message);
             Debug.LogError(LobbyMessage.text);
         }
         else

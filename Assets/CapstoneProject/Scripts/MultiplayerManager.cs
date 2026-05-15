@@ -3,12 +3,13 @@ using Photon.Realtime;
 using System.Collections.Generic;
 using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
     RoomOptions MultiplayerOptions;
+    PhotonView PV;
     int RoomID;
     int PlayerID;
     string username;
@@ -16,13 +17,14 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     string CreateRoomID;
     string JoinRoomID;
     int playerIndex;
-
+    bool GameStarting = false;
+    int EntryState = 0;
+    #region UIAndLists
     //UI Variables
     TextMeshProUGUI ConnectingText;
     TextMeshProUGUI TitleText;
     TextMeshProUGUI LocalPlayerText;
     TextMeshProUGUI[] MultiplayerText;
-    TextMeshProUGUI[] MultiplayerStatus;
     TextMeshProUGUI CreateIDEntry;
     TextMeshProUGUI JoinIDEntry;
     TextMeshProUGUI NewNameText;
@@ -33,10 +35,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     Button ManualJoinButton;
     Button AutoJoinButton;
     Button ChangeNameButton;
-    //ScrollRect RoomLog;
+    Button MultiSessionStartButton;
+    Button LeaveButton;
+    ScrollRect RoomLog;
     string room_msglog;
     TextMeshProUGUI RoomLogText;
     List<string> LogList = new List<string>();
+    #endregion
 
     void Awake()
     {
@@ -55,6 +60,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         CreateIDEntry = GameObject.Find("CID").GetComponent<TextMeshProUGUI>();
         JoinIDEntry = GameObject.Find("JID").GetComponent<TextMeshProUGUI>();
         LobbyMessage = GameObject.Find("LobbyMessage").GetComponent<TextMeshProUGUI>();
+        ManualCreateButton = GameObject.Find("CreateRoom").GetComponent<Button>();
+        ManualJoinButton = GameObject.Find("JoinRoom").GetComponent<Button>();
+        AutoJoinButton = GameObject.Find("JoinRandom").GetComponent<Button>();
+        ChangeNameButton = GameObject.Find("ChangeName").GetComponent<Button>();
         ConnectingText.enabled = true;
         LobbyMenu.alpha = 0.0f;
         LobbyMenu.interactable = false;
@@ -64,27 +73,20 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         RoomMenu.alpha = 0.0f;
         RoomMenu.interactable = false;
         RoomMenu.blocksRaycasts = false;
+        MultiSessionStartButton = GameObject.Find("ReadyStart").GetComponent<Button>();
+        LeaveButton = GameObject.Find("LeaveRoom").GetComponent<Button>();
         //Gets text objects for the room screen
         MultiplayerText = new TextMeshProUGUI[4];
         MultiplayerText[0] = GameObject.Find("Player1Text").GetComponent<TextMeshProUGUI>();
         MultiplayerText[1] = GameObject.Find("Player2Text").GetComponent<TextMeshProUGUI>();
         MultiplayerText[2] = GameObject.Find("Player3Text").GetComponent<TextMeshProUGUI>();
         MultiplayerText[3] = GameObject.Find("Player4Text").GetComponent<TextMeshProUGUI>();
-        //Gets text objects for the room screen
-        MultiplayerStatus = new TextMeshProUGUI[4];
-        MultiplayerStatus[0] = GameObject.Find("Player1Status").GetComponent<TextMeshProUGUI>();
-        MultiplayerStatus[1] = GameObject.Find("Player2Status").GetComponent<TextMeshProUGUI>();
-        MultiplayerStatus[2] = GameObject.Find("Player3Status").GetComponent<TextMeshProUGUI>();
-        MultiplayerStatus[3] = GameObject.Find("Player4Status").GetComponent<TextMeshProUGUI>();
-        //Gets buttons from the scene
-        ManualCreateButton = GameObject.Find("CreateRoom").GetComponent<Button>();
-        ManualJoinButton = GameObject.Find("JoinRoom").GetComponent<Button>();
-        AutoJoinButton = GameObject.Find("JoinRandom").GetComponent<Button>();
-        ChangeNameButton = GameObject.Find("ChangeName").GetComponent<Button>();
         //Gets room log object
-        //RoomLog = GameObject.Find("RoomLog").GetComponent<ScrollRect>();
+        RoomLog = GameObject.Find("RoomLog").GetComponent<ScrollRect>();
         RoomLogText = GameObject.Find("RoomLogText").GetComponent<TextMeshProUGUI>();
         #endregion
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PV = GetComponent<PhotonView>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -123,31 +125,51 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 RoomMenu.alpha = 1.0f;
                 RoomMenu.interactable = true;
                 RoomMenu.blocksRaycasts = true;
-                for(int x=0; x<PhotonNetwork.CurrentRoom.MaxPlayers; x++)
+                for (int x = 0; x < PhotonNetwork.CurrentRoom.MaxPlayers; x++)
                 {
-                    MultiplayerText[x].text = " ";
-                    MultiplayerStatus[x].text = "NOT PRESENT";
+                    MultiplayerText[x].text = "NOT PRESENT";
                 }
                 playerIndex = 0;
                 foreach (Player human in PhotonNetwork.PlayerList)
                 {
-                    if (human.NickName == PhotonNetwork.NickName)
+                    if (human.IsMasterClient && human.NickName == PhotonNetwork.NickName)
                     {
-                        MultiplayerText[playerIndex].text = human.NickName + "(YOU)";
+                        MultiplayerText[playerIndex].text = "[YOU] " + human.NickName + " (Leader)";
                     }
-                    MultiplayerText[playerIndex].text = human.NickName;
-                    MultiplayerStatus[playerIndex].text = "PRESENT";
+                    else if (human.IsMasterClient && human.NickName != PhotonNetwork.NickName)
+                    {
+                        MultiplayerText[playerIndex].text = human.NickName + " (Leader)";
+                    }
+                    else if (!human.IsMasterClient && human.NickName == PhotonNetwork.NickName)
+                    {
+                        MultiplayerText[playerIndex].text = "[YOU] " + human.NickName;
+                    }
+                    else
+                    {
+                        MultiplayerText[playerIndex].text = human.NickName;
+                    }
                     playerIndex++;
                 }
-                room_msglog = "";
-                if (LogList.Count >= 50)
+                UpdateLog();
+
+                if (GameStarting)
                 {
-                    LogList.RemoveAt(0);
+                    switch (EntryState)
+                    {
+                        case 0:
+                            EntryState = 1;
+                            MultiSessionStartButton.interactable = false;
+                            LeaveButton.interactable = false;
+                            break;
+                        case 1:
+                            photonView.RPC("StartMultiplayerGame", RpcTarget.All); EntryState = 2; break;
+                        default: break;
+                    }
                 }
-                foreach (string msg in LogList)
+                else
                 {
-                    room_msglog = room_msglog + string.Format("\n{0} - {1}", LogList.IndexOf(msg), msg);
-                    RoomLogText.text=(room_msglog);
+                    MultiSessionStartButton.interactable = true;
+                    LeaveButton.interactable = true;
                 }
             }
         }
@@ -161,6 +183,54 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             RoomMenu.alpha = 0.0f;
             RoomMenu.interactable = false;
             RoomMenu.blocksRaycasts = false;
+        }
+    }
+
+    [PunRPC] void StartMultiplayerGame()
+    {
+        StartCoroutine(EnterMultiplayerWorld());
+    }
+
+    IEnumerator EnterMultiplayerWorld()
+    {
+        LogList.Add("The game is about to begin!");
+        RoomLog.verticalScrollbar.value = 0;
+        yield return new WaitForSeconds(3.0f);
+        PhotonNetwork.LoadLevel("_MultiplayerRoom");
+    }
+
+    public void GameStart()
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                GameStarting = true;
+            }
+            else
+            {
+                LogList.Add("Only the leader can start the game.");
+                RoomLog.verticalScrollbar.value = 0;
+            }
+        }
+        else
+        {
+            LogList.Add("[" + DateTime.Now.ToString() + "] You are the only one here! Please wait until another player joins your room.");
+            RoomLog.verticalScrollbar.value = 0;
+        }
+    }
+
+    public void UpdateLog()
+    {
+        room_msglog = "";
+        if (LogList.Count >= 50)
+        {
+            LogList.RemoveAt(0);
+        }
+        foreach (string msg in LogList)
+        {
+            room_msglog = room_msglog + string.Format("\n{0}\t", msg);
+            RoomLogText.text = (room_msglog);
         }
     }
 
@@ -245,18 +315,35 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         string InitialEntryMSG = "[" + DateTime.Now.ToString() + "] Hello, " + newPlayer.NickName + "! [" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
         LogList.Add(InitialEntryMSG);
+        RoomLog.verticalScrollbar.value = 0;
+        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        {
+            InitialEntryMSG = "[" + DateTime.Now.ToString() + "] You have found a player! Are you ready to start the game!";
+            LogList.Add(InitialEntryMSG);
+            RoomLog.verticalScrollbar.value = 0;
+        }
     }
 
     public override void OnPlayerLeftRoom(Player other)
     {
         string InitialEntryMSG = "[" + DateTime.Now.ToString() + "] See you again, " + other.NickName + "! [" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
         LogList.Add(InitialEntryMSG);
+        RoomLog.verticalScrollbar.value = 0;
     }
 
     public override void OnJoinedRoom()
     {
         string InitialEntryMSG = "[" + DateTime.Now.ToString() + "] You're in: " + PhotonNetwork.CurrentRoom.Name + "[" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        if (PhotonNetwork.IsMasterClient)
+        {
+            InitialEntryMSG = "[" + DateTime.Now.ToString() + "] You have entered room \"" + PhotonNetwork.CurrentRoom.Name + "\" as the leader.[" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        }
+        else
+        {
+            InitialEntryMSG = "[" + DateTime.Now.ToString() + "] You have entered room \"" + PhotonNetwork.CurrentRoom.Name + "\" as a member.[" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        }
         LogList.Add(InitialEntryMSG);
+        RoomLog.verticalScrollbar.value = 0;
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -290,5 +377,20 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             LobbyMessage.text = string.Format("[{0}] Unknown error occurred. Please try again.", message);
             Debug.LogError(LobbyMessage.text);
         }
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        string InitialEntryMSG;
+        if (PhotonNetwork.NickName == newMasterClient.NickName)
+        {
+            InitialEntryMSG = "[" + DateTime.Now.ToString() + "] The former leader has left. You are now the leader. [" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        }
+        else
+        {
+            InitialEntryMSG = "[" + DateTime.Now.ToString() + "] The former leader has left. " + newMasterClient.NickName + " is now the leader. [" + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "]";
+        }
+        LogList.Add(InitialEntryMSG);
+        RoomLog.verticalScrollbar.value = 0;
     }
 }

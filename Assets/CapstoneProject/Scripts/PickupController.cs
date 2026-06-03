@@ -1,18 +1,9 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PickupController : MonoBehaviour
 {
-    PlayerAction PAct;
-    InputAction Player_Move;
-    InputAction Player_Jump;
-    InputAction Player_Run;
-    InputAction Player_Interact;
-    InputAction Player_LMB;
-    InputAction Player_RMB;
-    InputAction ShowCursor;
-
     [Header("Pickup Settings")]
     public float pickupRange = 5f;
 
@@ -21,16 +12,12 @@ public class PickupController : MonoBehaviour
 
     [Header("Hold Distance")]
     public float holdDistance = 2f;
-
     public float minHoldDistance = 1.5f;
-
     public float maxHoldDistance = 8f;
-
     public float scrollSpeed = 4f;
 
     [Header("Movement")]
     public float moveSpeed = 20f;
-
     public float rotateSpeed = 15f;
 
     [Header("Layer")]
@@ -41,48 +28,31 @@ public class PickupController : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource audioSource;
-
     public AudioClip pickupSound;
-
     public AudioClip holdSound;
-
     public AudioClip dropSound;
 
+    [Header("Input Actions")]
+    public InputActionReference interactAction;
+    public InputActionReference scrollAction;
+
+    [Header("References")]
+    public FPS_Controller playerController;
+
     private Rigidbody heldObject;
-
     private ObjectHighlight currentHighlight;
-
     private AudioSource holdAudioSource;
 
-    void Awake() { PAct = new PlayerAction(); }
     void OnEnable()
     {
-        Debug.Log("Simulation started.");
-        Player_Move = PAct.PlayableCharacter.Move;
-        Player_Jump = PAct.PlayableCharacter.Jump;
-        Player_Run = PAct.PlayableCharacter.Run;
-        Player_Interact = PAct.PlayableCharacter.Interact;
-        Player_LMB = PAct.PlayableCharacter.LeftClick;
-        Player_RMB = PAct.PlayableCharacter.RightClick;
-        ShowCursor = PAct.UserInterface.ShowCursor;
-        Player_Move.Enable();
-        Player_Jump.Enable();
-        Player_Run.Enable();
-        Player_Interact.Enable();
-        Player_LMB.Enable();
-        Player_RMB.Enable();
-        ShowCursor.Enable();
+        interactAction.action.Enable();
+        scrollAction.action.Enable();
     }
+
     void OnDisable()
     {
-        Debug.Log("Simulation ended.");
-        Player_Move.Disable();
-        Player_Jump.Disable();
-        Player_Run.Disable();
-        Player_Interact.Disable();
-        Player_LMB.Disable();
-        Player_RMB.Disable();
-        ShowCursor.Disable();
+        interactAction.action.Disable();
+        scrollAction.action.Disable();
     }
 
     void Start()
@@ -90,48 +60,43 @@ public class PickupController : MonoBehaviour
         interactionText.gameObject.SetActive(false);
 
         holdAudioSource = gameObject.AddComponent<AudioSource>();
-
         holdAudioSource.loop = true;
-
         holdAudioSource.playOnAwake = false;
-
         holdAudioSource.clip = holdSound;
 
-        // Initialize hold point
         holdPoint.localPosition =
             new Vector3(0, 0, holdDistance);
     }
 
-    void LeftClick()
+    void Update()
     {
+        // Prevent pickup while shop is open
+        if (playerController != null && playerController.shopOpen)
+        {
+            return;
+        }
+
+        HandleRaycast();
+
         if (heldObject != null)
         {
             MoveObject();
-
             HandleScroll();
 
-            // Input System uses Mouse.current.leftButton.wasPressedThisFrame
-            // Left click again to drop
-            if (Player_LMB.WasPerformedThisFrame())
+            // Click again to drop
+            if (interactAction.action.triggered)
             {
                 DropObject();
             }
         }
         else
         {
-            // Left click to pick up
-            if (Player_LMB.WasPerformedThisFrame())
+            // Click to pickup
+            if (interactAction.action.triggered)
             {
                 TryPickup();
             }
         }
-    }
-
-    void Update()
-    {
-        HandleRaycast();
-
-        LeftClick();
     }
 
     void HandleRaycast()
@@ -145,7 +110,6 @@ public class PickupController : MonoBehaviour
         if (currentHighlight != null)
         {
             currentHighlight.RemoveHighlight();
-
             currentHighlight = null;
         }
 
@@ -162,29 +126,22 @@ public class PickupController : MonoBehaviour
             Rigidbody rb =
                 hit.collider.GetComponent<Rigidbody>();
 
-            // Highlight ONLY if object is not held
-            if (
-                highlight != null &&
-                rb != heldObject
-            )
+            // Highlight if not held
+            if (highlight != null && rb != heldObject)
             {
                 currentHighlight = highlight;
-
                 currentHighlight.Highlight();
             }
 
-            // Show UI ONLY if object is not held
-            if (
-                trash != null &&
-                rb != heldObject
-            )
+            // Show UI if not held
+            if (trash != null && rb != heldObject)
             {
                 interactionText.gameObject.SetActive(true);
 
                 interactionText.text =
                     trash.itemName +
                     "\nValue: " +
-                    trash.amount +
+                    trash.value +
                     "\n\nLeft Click to Pick Up";
             }
         }
@@ -206,7 +163,6 @@ public class PickupController : MonoBehaviour
             {
                 heldObject = rb;
 
-                // Reset hold distance properly
                 holdDistance = Mathf.Clamp(
                     holdDistance,
                     minHoldDistance,
@@ -216,7 +172,7 @@ public class PickupController : MonoBehaviour
                 holdPoint.localPosition =
                     new Vector3(0, 0, holdDistance);
 
-                // Remove highlight immediately
+                // Remove highlight
                 ObjectHighlight highlight =
                     heldObject.GetComponent<ObjectHighlight>();
 
@@ -226,14 +182,14 @@ public class PickupController : MonoBehaviour
                 }
 
                 heldObject.useGravity = false;
-
                 heldObject.linearDamping = 10f;
-
                 heldObject.angularDamping = 10f;
-
                 heldObject.freezeRotation = true;
 
-                audioSource.PlayOneShot(pickupSound);
+                if (audioSource != null && pickupSound != null)
+                {
+                    audioSource.PlayOneShot(pickupSound);
+                }
 
                 if (holdSound != null)
                 {
@@ -256,7 +212,7 @@ public class PickupController : MonoBehaviour
         float distance =
             direction.magnitude;
 
-        // Wall collision check
+        // Wall collision
         if (
             Physics.Raycast(
                 transform.position,
@@ -268,35 +224,37 @@ public class PickupController : MonoBehaviour
             )
         )
         {
-            // Ignore held object collision
             if (hit.rigidbody != heldObject)
             {
                 desiredPosition =
-                    hit.point - direction.normalized * 0.3f;
+                    hit.point -
+                    direction.normalized * 0.3f;
             }
         }
 
-        // Smooth movement
-        heldObject.position = Vector3.Lerp(
-            heldObject.position,
-            desiredPosition,
-            moveSpeed * Time.deltaTime
-        );
+        heldObject.position =
+            Vector3.Lerp(
+                heldObject.position,
+                desiredPosition,
+                moveSpeed * Time.deltaTime
+            );
 
-        // Smooth rotation
-        heldObject.rotation = Quaternion.Lerp(
-            heldObject.rotation,
-            transform.rotation,
-            rotateSpeed * Time.deltaTime
-        );
+        heldObject.rotation =
+            Quaternion.Lerp(
+                heldObject.rotation,
+                transform.rotation,
+                rotateSpeed * Time.deltaTime
+            );
     }
 
     void HandleScroll()
     {
-        float scroll =
-            Input.GetAxis("Mouse ScrollWheel");
+        Vector2 scrollInput =
+            scrollAction.action.ReadValue<Vector2>();
 
-        if (scroll != 0)
+        float scroll = scrollInput.y;
+
+        if (Mathf.Abs(scroll) > 0.01f)
         {
             holdDistance += scroll * scrollSpeed;
 
@@ -318,16 +276,33 @@ public class PickupController : MonoBehaviour
     void DropObject()
     {
         heldObject.useGravity = true;
-
         heldObject.linearDamping = 1f;
-
         heldObject.angularDamping = 0.05f;
-
         heldObject.freezeRotation = false;
 
-        audioSource.PlayOneShot(dropSound);
+        if (audioSource != null && dropSound != null)
+        {
+            audioSource.PlayOneShot(dropSound);
+        }
 
-        // Stop hold sound
+        if (holdAudioSource.isPlaying)
+        {
+            holdAudioSource.Stop();
+        }
+
+        heldObject = null;
+    }
+
+    public void DropHeldExternally()
+    {
+        if (heldObject == null)
+            return;
+
+        heldObject.useGravity = true;
+        heldObject.linearDamping = 1f;
+        heldObject.angularDamping = 0.05f;
+        heldObject.freezeRotation = false;
+
         if (holdAudioSource.isPlaying)
         {
             holdAudioSource.Stop();

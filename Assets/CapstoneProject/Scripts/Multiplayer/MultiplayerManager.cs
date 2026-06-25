@@ -39,6 +39,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     Button ChangeNameButton;
     Button MultiSessionStartButton;
     Button LeaveButton;
+    Button ReturnTitle;
     ScrollRect RoomLog;
     string room_msglog;
     TextMeshProUGUI RoomLogText;
@@ -66,6 +67,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         ManualJoinButton = GameObject.Find("JoinRoom").GetComponent<Button>();
         AutoJoinButton = GameObject.Find("JoinRandom").GetComponent<Button>();
         ChangeNameButton = GameObject.Find("ChangeName").GetComponent<Button>();
+        ReturnTitle = GameObject.Find("ReturnToTitleButton").GetComponent<Button>();
         ConnectingText.enabled = true;
         LobbyMenu.alpha = 0.0f;
         LobbyMenu.interactable = false;
@@ -117,6 +119,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 RoomMenu.alpha = 0.0f;
                 RoomMenu.interactable = false;
                 RoomMenu.blocksRaycasts = false;
+                ReturnTitle.enabled = true;
             }
             if (PhotonNetwork.InRoom)
             {
@@ -127,6 +130,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 RoomMenu.alpha = 1.0f;
                 RoomMenu.interactable = true;
                 RoomMenu.blocksRaycasts = true;
+                ReturnTitle.enabled = false;
                 for (int x = 0; x < PhotonNetwork.CurrentRoom.MaxPlayers; x++)
                 {
                     MultiplayerText[x].text = "NOT PRESENT";
@@ -185,6 +189,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             RoomMenu.alpha = 0.0f;
             RoomMenu.interactable = false;
             RoomMenu.blocksRaycasts = false;
+            ReturnTitle.enabled = true;
         }
     }
 

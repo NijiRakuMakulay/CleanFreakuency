@@ -68,15 +68,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         AutoJoinButton = GameObject.Find("JoinRandom").GetComponent<Button>();
         ChangeNameButton = GameObject.Find("ChangeName").GetComponent<Button>();
         ReturnTitle = GameObject.Find("ReturnToTitleButton").GetComponent<Button>();
-        ConnectingText.enabled = true;
-        LobbyMenu.alpha = 0.0f;
-        LobbyMenu.interactable = false;
-        LobbyMenu.blocksRaycasts = false;
         #endregion
         #region RoomMenu CanvasGroup
-        RoomMenu.alpha = 0.0f;
-        RoomMenu.interactable = false;
-        RoomMenu.blocksRaycasts = false;
         MultiSessionStartButton = GameObject.Find("ReadyStart").GetComponent<Button>();
         LeaveButton = GameObject.Find("LeaveRoom").GetComponent<Button>();
         //Gets text objects for the room screen
@@ -97,6 +90,14 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     void Start()
     {
         Debug.Log("Connecting to master server...");
+        ConnectingText.enabled = true;
+        LobbyMenu.alpha = 0.0f;
+        LobbyMenu.interactable = false;
+        LobbyMenu.blocksRaycasts = false;
+        RoomMenu.alpha = 0.0f;
+        RoomMenu.interactable = false;
+        RoomMenu.blocksRaycasts = false;
+        ReturnTitle.enabled = true;
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -108,6 +109,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         if (NewNameText.text.Length <= 1) { ChangeNameButton.interactable = false; } else { ChangeNameButton.interactable = true; }
         if (PhotonNetwork.IsConnected)
         {
+            ConnectingText.enabled = false;
             LocalPlayerText.enabled = true;
             LocalPlayerText.text = "Username: " + PhotonNetwork.NickName;
             if (PhotonNetwork.InLobby)
@@ -401,5 +403,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         RoomLog.verticalScrollbar.value = 0;
     }
 
-    public void ReturnToTitle() { SceneManager.LoadScene("_TitleScreen"); }
+    public void ReturnToTitle() {
+        PhotonNetwork.LeaveLobby();
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("_TitleScreen");
+    }
 }

@@ -2614,6 +2614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashItem
   itemName: Steel Drawer
+  amount: 0
   value: 250
 --- !u!114 &1882652348
 MonoBehaviour:
@@ -3129,14 +3130,14 @@ MonoBehaviour:
   rotateSpeed: 10
   pickupLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   interactionText: {fileID: 2764780474152362765}
   audioSource: {fileID: 5828604014025409460}
   pickupSound: {fileID: 8300000, guid: 1fc92e680ecefef47bc6c176cfaf60c8, type: 3}
   holdSound: {fileID: 8300000, guid: 32c168253fad2574bac82f67c61d0a9e, type: 3}
   dropSound: {fileID: 8300000, guid: 178c9f876a0146f4aa4a27a001516fae, type: 3}
-  interactAction: {fileID: 2026494005056934852, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
-  scrollAction: {fileID: -8204589200814985267, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
+  interactAction: {fileID: 2026494005056934852, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
+  scrollAction: {fileID: -8204589200814985267, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
   playerController: {fileID: 3365163691033831539}
 --- !u!114 &904635295882693717
 MonoBehaviour:
@@ -3649,10 +3650,10 @@ MonoBehaviour:
   playerCamera: {fileID: 7698423623006990651}
   lookSpeed: 0.05
   lookXLimit: 45
-  moveAction: {fileID: 3164770338009756318, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
-  lookAction: {fileID: 8093375016740634856, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
-  jumpAction: {fileID: -4311905874031673050, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
-  runAction: {fileID: 5236001453655073396, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
+  moveAction: {fileID: 3164770338009756318, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
+  lookAction: {fileID: 8093375016740634856, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
+  jumpAction: {fileID: -4145367290808221229, guid: b9d4347e2c7d3764d9f6d5f85be45cf3, type: 3}
+  runAction: {fileID: -2078065414399896995, guid: b9d4347e2c7d3764d9f6d5f85be45cf3, type: 3}
   canMove: 1
   shopOpen: 0
   disassemblyMode: 0
@@ -4016,6 +4017,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashItem
   itemName: Broken Fan
+  amount: 0
   value: 20
 --- !u!54 &4512259049557123232
 Rigidbody:
@@ -4763,6 +4765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashItem
   itemName: Bottle
+  amount: 0
   value: 15
 --- !u!222 &8237005645976247214
 CanvasRenderer:
@@ -4982,6 +4985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashItem
   itemName: Box
+  amount: 0
   value: 25
 --- !u!1 &9007565486810273212
 GameObject:

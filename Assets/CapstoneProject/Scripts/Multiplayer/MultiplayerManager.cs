@@ -6,6 +6,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
+
 public class MultiplayerManager : MonoBehaviourPunCallbacks
 {
     RoomOptions MultiplayerOptions;
@@ -393,4 +395,6 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         LogList.Add(InitialEntryMSG);
         RoomLog.verticalScrollbar.value = 0;
     }
+
+    public void ReturnToTitle() { SceneManager.LoadScene("_TitleScreen"); }
 }

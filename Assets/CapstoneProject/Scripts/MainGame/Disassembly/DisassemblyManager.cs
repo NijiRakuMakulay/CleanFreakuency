@@ -15,6 +15,9 @@ public class DisassemblyManager : MonoBehaviour
     [Header("Normal Rewards")]
     public List<GameObject> rewardParts;
 
+    [Header("Reward Spawn Points")]
+    public List<Transform> rewardSpawnPoints;
+
     [Header("Secret Reward")]
     public GameObject bonusReward;
 
@@ -43,7 +46,10 @@ public class DisassemblyManager : MonoBehaviour
 
     void OnDisable()
     {
-        clickAction.action.Disable();
+        if (clickAction != null)
+        {
+            clickAction.action.Disable();
+        }
     }
 
     public void BeginDisassembly(GameObject obj)
@@ -65,10 +71,8 @@ public class DisassemblyManager : MonoBehaviour
         if (currentObject == null || !tableCamera.gameObject.activeSelf)
             return;
 
-        // Hover detection
         HandleHover();
 
-        // Click detection
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
             Debug.Log("Mouse click detected");
@@ -100,6 +104,16 @@ public class DisassemblyManager : MonoBehaviour
 
             if (part == null)
             {
+                part = hit.collider.GetComponentInParent<DisassemblyPart>();
+            }
+
+            if (part == null)
+            {
+                part = hit.collider.GetComponentInChildren<DisassemblyPart>();
+            }
+
+            if (part == null)
+            {
                 Debug.Log(
                     "No DisassemblyPart"
                 );
@@ -125,18 +139,15 @@ public class DisassemblyManager : MonoBehaviour
 
         if (part.removeVisual != null)
         {
-            if (part.removeVisual != null)
-            {
-                part.removeVisual.SetActive(false);
-            }
+            part.removeVisual.SetActive(false);
+        }
 
-            Collider col =
-                part.GetComponent<Collider>();
+        Collider col =
+            part.GetComponent<Collider>();
 
-            if (col != null)
-            {
-                col.enabled = false;
-            }
+        if (col != null)
+        {
+            col.enabled = false;
         }
 
         if (parts.Count == 0)
@@ -147,20 +158,21 @@ public class DisassemblyManager : MonoBehaviour
 
     void FinishDisassembly()
     {
-        // Normal rewards
+        int spawnIndex = 0;
+
         foreach (
             GameObject reward
             in rewardParts
         )
         {
-            Instantiate(
+            SpawnReward(
                 reward,
-                currentObject.transform.position,
-                Quaternion.identity
+                spawnIndex
             );
+
+            spawnIndex++;
         }
 
-        // Secret reward check
         bool secretUnlocked =
             clickHistory.SequenceEqual(
                 secretSequence
@@ -171,10 +183,9 @@ public class DisassemblyManager : MonoBehaviour
             bonusReward != null
         )
         {
-            Instantiate(
+            SpawnReward(
                 bonusReward,
-                currentObject.transform.position,
-                Quaternion.identity
+                spawnIndex
             );
 
             Debug.Log(
@@ -189,13 +200,70 @@ public class DisassemblyManager : MonoBehaviour
         table.EndDisassembly();
     }
 
+    void SpawnReward(
+        GameObject rewardPrefab,
+        int spawnIndex)
+    {
+        if (rewardPrefab == null)
+        {
+            Debug.LogWarning("Reward prefab is missing.");
+            return;
+        }
+
+        if (rewardSpawnPoints == null || rewardSpawnPoints.Count == 0)
+        {
+            Debug.LogWarning("No reward spawn points assigned. Spawning at current object position instead.");
+
+            Instantiate(
+                rewardPrefab,
+                currentObject.transform.position,
+                Quaternion.identity
+            );
+
+            return;
+        }
+
+        if (spawnIndex >= rewardSpawnPoints.Count)
+        {
+            Debug.LogWarning(
+                "Not enough reward spawn points. Add more spawn points or reduce the number of rewards."
+            );
+
+            return;
+        }
+
+        Transform spawnPoint =
+            rewardSpawnPoints[spawnIndex];
+
+        if (spawnPoint == null)
+        {
+            Debug.LogWarning("Reward spawn point is missing in the Inspector.");
+            return;
+        }
+
+        GameObject spawnedReward =
+            Instantiate(
+                rewardPrefab,
+                spawnPoint.position,
+                spawnPoint.rotation
+            );
+
+        Rigidbody rb =
+            spawnedReward.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
+
     void HandleHover()
     {
         Ray ray = tableCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         RaycastHit hit;
 
-        // Remove previous highlight
         if (hoveredPart != null)
         {
             ObjectHighlight oldHighlight =
@@ -211,7 +279,7 @@ public class DisassemblyManager : MonoBehaviour
 
         int mask = ~LayerMask.GetMask("DisassemblyTable");
 
-        if (Physics.Raycast(ray,out hit, 100f, mask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hit, 100f, mask, QueryTriggerInteraction.Ignore))
         {
             Debug.Log("Hover hit: " + hit.collider.name);
 
@@ -231,7 +299,7 @@ public class DisassemblyManager : MonoBehaviour
             {
                 hoveredPart = part;
 
-                Debug.Log("Hovering: " +part.name);
+                Debug.Log("Hovering: " + part.name);
 
                 ObjectHighlight highlight =
                     part.GetComponent<ObjectHighlight>();

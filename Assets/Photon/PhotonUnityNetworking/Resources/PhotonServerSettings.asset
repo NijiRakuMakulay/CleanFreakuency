@@ -37,6 +37,9 @@ MonoBehaviour:
   - StartMultiplayerGame
   - ClickRpc
   - DestroyRpc
+  - RPC_AttachStolenItem
+  - RPC_ClearHeldItemBecauseStolen
+  - RPC_TossStolenItem
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

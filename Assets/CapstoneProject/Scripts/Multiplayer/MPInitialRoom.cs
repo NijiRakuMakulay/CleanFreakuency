@@ -22,6 +22,10 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
                 Debug.Log(string.Format("Your game has started in room {0}!", PhotonNetwork.CurrentRoom.Name));
             }
         }
+        else
+        {
+            Debug.Log("This scene will only work when connected to Photon Network.");
+        }
     }
 
     // Update is called once per frame

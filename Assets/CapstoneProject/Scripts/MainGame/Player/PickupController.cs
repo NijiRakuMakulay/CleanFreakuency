@@ -146,7 +146,7 @@ public class PickupController : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    public override void OnEnable()
     {
         if (!ActivePickups.Contains(this))
         {
@@ -159,7 +159,7 @@ public class PickupController : MonoBehaviour
         }
     }
 
-    void OnDisable()
+    public override void OnDisable()
     {
         ActivePickups.Remove(this);
 

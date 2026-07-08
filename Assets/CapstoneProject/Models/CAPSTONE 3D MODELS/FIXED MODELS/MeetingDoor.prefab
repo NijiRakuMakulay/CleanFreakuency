@@ -323,15 +323,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2663590573789553215}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31bd9869e78a47b4984195993e54fddd, type: 3}
+  m_Script: {fileID: 11500000, guid: 062b68161f0811b4f8835659b6256b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhysicsDoor2
   hingePoint: {fileID: 4714030748679130997}
   worldHingeAxis: {x: 0, y: 1, z: 0}
   useLimits: 1
   minAngle: -100
-  maxAngle: 100
-  mass: 2
+  maxAngle: 0
+  mass: 8
   linearDamping: 1
   angularDamping: 4
   solverIterations: 12

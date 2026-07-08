@@ -109,11 +109,11 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         if (NewNameText.text.Length <= 1) { ChangeNameButton.interactable = false; } else { ChangeNameButton.interactable = true; }
         if (PhotonNetwork.IsConnected)
         {
-            ConnectingText.enabled = false;
-            LocalPlayerText.enabled = true;
             LocalPlayerText.text = "Username: " + PhotonNetwork.NickName;
             if (PhotonNetwork.InLobby)
             {
+                ConnectingText.enabled = false;
+                LocalPlayerText.enabled = true;
                 TitleText.text = "Multiplayer - Lobby";
                 LobbyMenu.alpha = 1.0f;
                 LobbyMenu.interactable = true;
@@ -205,7 +205,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         LogList.Add("The game is about to begin!");
         RoomLog.verticalScrollbar.value = 0;
         yield return new WaitForSeconds(3.0f);
-        PhotonNetwork.LoadLevel("_MultiplayerRoom");
+        PhotonNetwork.LoadLevel("Multiplayer");
     }
 
     public void GameStart()

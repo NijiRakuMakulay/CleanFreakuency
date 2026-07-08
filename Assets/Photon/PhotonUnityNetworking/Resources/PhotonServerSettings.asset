@@ -40,6 +40,8 @@ MonoBehaviour:
   - RPC_AttachStolenItem
   - RPC_ClearHeldItemBecauseStolen
   - RPC_TossStolenItem
+  - RPC_AttachItem
+  - RPC_TossItem
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

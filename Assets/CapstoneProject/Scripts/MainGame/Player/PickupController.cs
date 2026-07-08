@@ -32,6 +32,17 @@ public class PickupController : MonoBehaviour
     public float moveSpeed = 20f;
     public float rotateSpeed = 15f;
 
+    [Header("Hold Centering")]
+    [Tooltip("Keeps the visible/collider center of the held object in front of the camera, instead of using the object's pivot.")]
+    public bool centerHeldObjectByBounds = true;
+
+    [Tooltip("Distance from walls/obstacles while holding an object.")]
+    public float obstaclePadding = 0.3f;
+
+    [Header("Held Rotation")]
+    [Tooltip("Use this if some objects face the wrong way while held. Try Y = 90, -90, or 180.")]
+    public Vector3 heldRotationOffset = Vector3.zero;
+
     [Header("Layer")]
     public LayerMask pickupLayer;
 
@@ -135,7 +146,7 @@ public class PickupController : MonoBehaviour
         }
     }
 
-    public override void OnEnable()
+    void OnEnable()
     {
         if (!ActivePickups.Contains(this))
         {
@@ -148,9 +159,11 @@ public class PickupController : MonoBehaviour
         }
     }
 
-    public override void OnDisable()
+    void OnDisable()
     {
         ActivePickups.Remove(this);
+
+        StopHoldingEffects();
         DisableInputActions();
     }
 
@@ -284,13 +297,13 @@ public class PickupController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, pickupRange, pickupLayer))
         {
             ObjectHighlight highlight =
-                hit.collider.GetComponent<ObjectHighlight>();
+                hit.collider.GetComponentInParent<ObjectHighlight>();
 
             TrashItem trash =
-                hit.collider.GetComponent<TrashItem>();
+                hit.collider.GetComponentInParent<TrashItem>();
 
             Rigidbody rb =
-                hit.collider.GetComponent<Rigidbody>();
+                GetRigidbodyFromHit(hit);
 
             if (highlight != null && rb != heldObject)
             {
@@ -324,7 +337,7 @@ public class PickupController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, pickupRange, pickupLayer))
         {
             Rigidbody rb =
-                hit.collider.GetComponent<Rigidbody>();
+                GetRigidbodyFromHit(hit);
 
             if (rb != null)
             {
@@ -367,24 +380,31 @@ public class PickupController : MonoBehaviour
                 }
 
                 ObjectHighlight highlight =
-                    heldObject.GetComponent<ObjectHighlight>();
+                    heldObject.GetComponentInParent<ObjectHighlight>();
 
                 if (highlight != null)
                 {
                     highlight.RemoveHighlight();
                 }
 
+                heldObject.isKinematic = false;
                 heldObject.useGravity = false;
                 heldObject.linearDamping = 10f;
                 heldObject.angularDamping = 10f;
                 heldObject.freezeRotation = true;
+                heldObject.collisionDetectionMode =
+                    CollisionDetectionMode.ContinuousDynamic;
 
                 if (audioSource != null && pickupSound != null)
                 {
                     audioSource.PlayOneShot(pickupSound);
                 }
 
-                if (holdSound != null && holdAudioSource != null)
+                if (
+                    holdSound != null &&
+                    holdAudioSource != null &&
+                    !holdAudioSource.isPlaying
+                )
                 {
                     holdAudioSource.Play();
                 }
@@ -394,25 +414,33 @@ public class PickupController : MonoBehaviour
 
     void MoveObject()
     {
-        if (heldObject == null || holdPoint == null)
+        if (heldObject == null)
             return;
 
-        Vector3 desiredPosition =
-            holdPoint.position;
+        Vector3 desiredCenterPosition;
 
-        RaycastHit hit;
+        if (holdPoint != null)
+        {
+            desiredCenterPosition = holdPoint.position;
+        }
+        else
+        {
+            desiredCenterPosition =
+                transform.position + transform.forward * holdDistance;
+        }
 
         Vector3 direction =
-            desiredPosition - transform.position;
+            desiredCenterPosition - transform.position;
 
         float distance =
             direction.magnitude;
 
         if (
+            distance > 0.01f &&
             Physics.Raycast(
                 transform.position,
                 direction.normalized,
-                out hit,
+                out RaycastHit hit,
                 distance,
                 ~0,
                 QueryTriggerInteraction.Ignore
@@ -421,25 +449,127 @@ public class PickupController : MonoBehaviour
         {
             if (hit.rigidbody != heldObject)
             {
-                desiredPosition =
+                desiredCenterPosition =
                     hit.point -
-                    direction.normalized * 0.3f;
+                    direction.normalized * obstaclePadding;
             }
         }
 
-        heldObject.position =
+        Vector3 desiredPivotPosition =
+            GetDesiredPivotPositionFromCenter(desiredCenterPosition);
+
+        Quaternion targetRotation =
+            Quaternion.LookRotation(transform.forward, Vector3.up) *
+            Quaternion.Euler(heldRotationOffset);
+
+        heldObject.MovePosition(
             Vector3.Lerp(
                 heldObject.position,
-                desiredPosition,
+                desiredPivotPosition,
                 moveSpeed * Time.deltaTime
-            );
+            )
+        );
 
-        heldObject.rotation =
+        heldObject.MoveRotation(
             Quaternion.Lerp(
                 heldObject.rotation,
-                transform.rotation,
+                targetRotation,
                 rotateSpeed * Time.deltaTime
-            );
+            )
+        );
+    }
+
+    Vector3 GetDesiredPivotPositionFromCenter(Vector3 desiredCenterPosition)
+    {
+        if (heldObject == null)
+            return desiredCenterPosition;
+
+        if (!centerHeldObjectByBounds)
+            return desiredCenterPosition;
+
+        Vector3 objectCenter =
+            GetHeldObjectBoundsCenter();
+
+        Vector3 pivotToCenterOffset =
+            objectCenter - heldObject.position;
+
+        return desiredCenterPosition - pivotToCenterOffset;
+    }
+
+    Vector3 GetHeldObjectBoundsCenter()
+    {
+        if (heldObject == null)
+            return Vector3.zero;
+
+        Collider[] colliders =
+            heldObject.GetComponentsInChildren<Collider>();
+
+        bool hasBounds = false;
+        Bounds bounds = new Bounds();
+
+        foreach (Collider col in colliders)
+        {
+            if (col == null)
+                continue;
+
+            if (!col.enabled)
+                continue;
+
+            if (col.isTrigger)
+                continue;
+
+            if (!hasBounds)
+            {
+                bounds = col.bounds;
+                hasBounds = true;
+            }
+            else
+            {
+                bounds.Encapsulate(col.bounds);
+            }
+        }
+
+        if (hasBounds)
+            return bounds.center;
+
+        Renderer[] renderers =
+            heldObject.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == null)
+                continue;
+
+            if (!renderer.enabled)
+                continue;
+
+            if (!hasBounds)
+            {
+                bounds = renderer.bounds;
+                hasBounds = true;
+            }
+            else
+            {
+                bounds.Encapsulate(renderer.bounds);
+            }
+        }
+
+        if (hasBounds)
+            return bounds.center;
+
+        return heldObject.position;
+    }
+
+    Rigidbody GetRigidbodyFromHit(RaycastHit hit)
+    {
+        Rigidbody rb = hit.collider.attachedRigidbody;
+
+        if (rb == null)
+        {
+            rb = hit.collider.GetComponentInParent<Rigidbody>();
+        }
+
+        return rb;
     }
 
     void HandleScroll()
@@ -479,6 +609,7 @@ public class PickupController : MonoBehaviour
         if (heldObject == null)
             return;
 
+        heldObject.isKinematic = false;
         heldObject.useGravity = true;
         heldObject.linearDamping = 1f;
         heldObject.angularDamping = 0.05f;
@@ -504,6 +635,7 @@ public class PickupController : MonoBehaviour
         if (heldObject == null)
             return;
 
+        heldObject.isKinematic = false;
         heldObject.useGravity = true;
         heldObject.linearDamping = 1f;
         heldObject.angularDamping = 0.05f;
@@ -554,8 +686,12 @@ public class PickupController : MonoBehaviour
 
         if (rb != null)
         {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            if (!rb.isKinematic)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+
             rb.useGravity = false;
             rb.isKinematic = true;
             rb.freezeRotation = true;

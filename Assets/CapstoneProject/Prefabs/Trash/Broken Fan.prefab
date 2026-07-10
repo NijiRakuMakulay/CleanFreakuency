@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2861196438153271885}
   - component: {fileID: 2106499490494402781}
   - component: {fileID: 3879703265750835733}
+  - component: {fileID: 6513177201128547025}
   m_Layer: 3
   m_Name: Broken Fan
   m_TagString: Untagged
@@ -169,3 +170,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrashItem
   itemName: Broken Fan
   value: 20
+--- !u!114 &6513177201128547025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7246087949137808801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 3879703265750835733}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

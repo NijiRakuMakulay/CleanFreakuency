@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5797443820637939689}
   - component: {fileID: 1991738720268952709}
   - component: {fileID: 5676713378540543395}
+  - component: {fileID: 3851953159772515299}
   m_Layer: 3
   m_Name: Metal Plate
   m_TagString: Untagged
@@ -169,3 +170,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectHighlight
   glowMaterial: {fileID: 2100000, guid: 0e8950bd7c468414eb30f231158e8079, type: 2}
+--- !u!114 &3851953159772515299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003593549091828711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 5797443820637939689}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

@@ -170,9 +170,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2527719899412186289}
   - component: {fileID: 5106030911328864567}
-  - component: {fileID: 1756486635915675451}
   - component: {fileID: 2783584418747683029}
   - component: {fileID: 8927451385216806308}
+  - component: {fileID: 1084922724336491224}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -247,14 +247,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &1756486635915675451
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2619205658674728222}
-  m_Enabled: 1
 --- !u!114 &2783584418747683029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,6 +325,28 @@ MonoBehaviour:
   interactAction: {fileID: 2026494005056934852, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
   scrollAction: {fileID: -8204589200814985267, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
   playerController: {fileID: 5662319844619485788}
+--- !u!114 &1084922724336491224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2619205658674728222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &3073642796195065393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,6 +1028,7 @@ GameObject:
   - component: {fileID: 4483281694808590667}
   - component: {fileID: 5662319844619485788}
   - component: {fileID: 9151434325259495986}
+  - component: {fileID: 9032763628531194132}
   m_Layer: 0
   m_Name: OnlinePlayer
   m_TagString: Player
@@ -1107,5 +1122,28 @@ MonoBehaviour:
   cartLayer:
     serializedVersion: 2
     m_Bits: 0
-  interactAction: {fileID: 2026494005056934852, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
-  scrollAction: {fileID: -8204589200814985267, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
+  interactAction: {fileID: 2026494005056934852, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
+  scrollAction: {fileID: -8204589200814985267, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
+--- !u!114 &9032763628531194132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8886977149214067668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 5662319844619485788}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

@@ -8,15 +8,31 @@ public class ShopTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            shopUI.OpenShop();
+            shopUI.OpenShop(other.gameObject);
         }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (shopUI.panel.activeInHierarchy)
+            {
+                other.GetComponent<FPS_Controller>().shopOpen = true;
+            }
+            else
+            {
+                other.GetComponent<FPS_Controller>().shopOpen = false;
+            }
+        }
+        
     }
 
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            shopUI.CloseShop();
+            shopUI.AutoCloseShop(other.gameObject);
         }
     }
 }

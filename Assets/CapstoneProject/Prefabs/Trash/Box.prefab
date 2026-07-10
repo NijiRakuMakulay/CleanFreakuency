@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4728383403394231485}
   - component: {fileID: 5881314805141381872}
   - component: {fileID: 3000590797545005923}
+  - component: {fileID: 7583924695446340764}
   m_Layer: 3
   m_Name: Box
   m_TagString: Untagged
@@ -169,3 +170,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrashItem
   itemName: Box
   value: 25
+--- !u!114 &7583924695446340764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246356144355689105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 3000590797545005923}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

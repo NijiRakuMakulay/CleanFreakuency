@@ -1,8 +1,10 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class FPS_Controller : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public class FPS_Controller : MonoBehaviourPunCallbacks, IPunObservable
 {
     [Header("Movement Settings")]
     public float walkingSpeed = 5f;
@@ -35,7 +37,12 @@ public class FPS_Controller : MonoBehaviour
     [HideInInspector]
     public bool disassemblyMode = false;
 
-    void OnEnable()
+    PhotonView pv;
+    [Header("Network sync variables")]
+    private Vector3 networkPosition;
+    private Quaternion networkRotation;
+
+    public override void OnEnable()
     {
         moveAction.action.Enable();
         lookAction.action.Enable();
@@ -43,7 +50,7 @@ public class FPS_Controller : MonoBehaviour
         runAction.action.Enable();
     }
 
-    void OnDisable()
+    public override void OnDisable()
     {
         moveAction.action.Disable();
         lookAction.action.Disable();
@@ -57,9 +64,51 @@ public class FPS_Controller : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        networkPosition = transform.position;
+        networkRotation = transform.rotation;
+        pv = GetComponent<PhotonView>();
+        if (PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                Debug.LogWarning("Operating in Multiplayer Mode");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Operating in Singleplayer Mode");
+        }
     }
 
     void Update()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                if (pv.IsMine)
+                {
+                    PlayerControls();
+                    playerCamera.enabled = true;
+                }
+                else
+                {
+                    playerCamera.enabled = false;
+                    transform.position = networkPosition;
+                    transform.rotation = networkRotation;
+                    //transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
+                    //transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * 10f);
+                }
+            }
+        }
+        else
+        {
+            PlayerControls();
+        }
+        
+    }
+
+    void PlayerControls()
     {
         // Cursor Handling
         if (shopOpen || disassemblyMode)
@@ -127,6 +176,20 @@ public class FPS_Controller : MonoBehaviour
                 Quaternion.Euler(rotationX, 0, 0);
 
             transform.Rotate(0, lookInput.x * lookSpeed, 0);
+        }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting) // Local player → send data
+        {
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+        }
+        else // Remote player → receive data
+        {
+            networkPosition = (Vector3)stream.ReceiveNext();
+            networkRotation = (Quaternion)stream.ReceiveNext();
         }
     }
 }

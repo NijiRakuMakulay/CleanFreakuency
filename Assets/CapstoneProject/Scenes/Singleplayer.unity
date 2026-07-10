@@ -347,6 +347,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6513177201128547025, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
+      propertyPath: sceneViewId
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7246087949137808801, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_Name
       value: Broken Fan (5)
@@ -2522,6 +2526,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2733,7 +2741,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 180389699}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6755348249a525346a9df9f3fb608ba6, type: 3}
+  m_Script: {fileID: 11500000, guid: 75974c7999038474f91deba5d98578d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopTrigger
   shopUI: {fileID: 919181203}
@@ -3765,6 +3773,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 22
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4401,6 +4413,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6513177201128547025, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
+      propertyPath: sceneViewId
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7246087949137808801, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_Name
       value: Broken Fan (3)
@@ -4990,22 +5006,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6869950579385735248, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
+      propertyPath: sceneViewId
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
---- !u!114 &436980941 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1426347817322614865, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
-  m_PrefabInstance: {fileID: 6136067480126099409}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6355005afb9aefc4a8824664d43be7eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DisassemblyTable
 --- !u!1001 &439119135
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6136,6 +6145,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6197,6 +6210,10 @@ PrefabInstance:
     - target: {fileID: 6559842738764342435, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6694,6 +6711,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6513177201128547025, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
+      propertyPath: sceneViewId
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 7246087949137808801, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_Name
       value: Broken Fan
@@ -6771,6 +6792,10 @@ PrefabInstance:
       propertyPath: holdPoint
       value: 
       objectReference: {fileID: 303868042}
+    - target: {fileID: 7903254858322828542, guid: c1c5cf118cc1b544b9b7d9b478a26d75, type: 3}
+      propertyPath: forbiddenStealLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8446283332716035530, guid: c1c5cf118cc1b544b9b7d9b478a26d75, type: 3}
       propertyPath: m_Name
       value: antagonist (Cafe)
@@ -8690,6 +8715,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8976,6 +9005,10 @@ PrefabInstance:
     - target: {fileID: 6559842738764342435, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9712,7 +9745,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 919181199}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0376ae64cb3f6dc41a9e9d832decc15d, type: 3}
+  m_Script: {fileID: 11500000, guid: 09701527c84ce5b479dd1300eac08bd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopUI
   panel: {fileID: 919181199}
@@ -9720,7 +9753,6 @@ MonoBehaviour:
   itemListText: {fileID: 260978128}
   totalValueText: {fileID: 719258868}
   shopArea: {fileID: 180389704}
-  playerController: {fileID: 5289699065423700126}
 --- !u!1001 &925424494
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11726,7 +11758,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DisassemblyManager
   tableCamera: {fileID: 945877669}
   clickAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  table: {fileID: 436980941}
+  table: {fileID: 1710899458}
   rewardParts:
   - {fileID: 8438052776566724320, guid: 2b5c58201e270f144a0e6c388487ebc8, type: 3}
   - {fileID: 8438052776566724320, guid: 2b5c58201e270f144a0e6c388487ebc8, type: 3}
@@ -11931,6 +11963,10 @@ PrefabInstance:
     - target: {fileID: 240766886264698599, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6513177201128547025, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
+      propertyPath: sceneViewId
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7246087949137808801, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_Name
@@ -13284,6 +13320,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 21
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13613,7 +13653,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 919181203}
         m_TargetAssemblyTypeName: ShopUI, Assembly-CSharp
-        m_MethodName: CloseShop
+        m_MethodName: ManualCloseShop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15466,6 +15506,10 @@ PrefabInstance:
     - target: {fileID: 240766886264698599, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6513177201128547025, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
+      propertyPath: sceneViewId
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7246087949137808801, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_Name
@@ -17325,6 +17369,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1415554917132264573, guid: b1c44f32b6bdf644b888645e345d31e8, type: 3}
   m_PrefabInstance: {fileID: 1137750915}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1710899458 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7958703901856608263, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
+  m_PrefabInstance: {fileID: 6136067480126099409}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4412680d18aed804b90165979e522db9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DisassemblyTable
 --- !u!4 &1721753897 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7335699691499246711, guid: c9dc6e034ec83e147ac55ffda27621c5, type: 3}
@@ -18131,6 +18186,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6869950579385735248, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
+      propertyPath: sceneViewId
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18612,6 +18671,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4079293110811356839, guid: fef1bcf044e73aa4181fe704c564784b, type: 3}
+      propertyPath: sceneViewId
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 6114736415319599131, guid: fef1bcf044e73aa4181fe704c564784b, type: 3}
       propertyPath: m_Name
       value: Steel Cabinet
@@ -19248,6 +19311,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6513177201128547025, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
+      propertyPath: sceneViewId
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 7246087949137808801, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_Name
       value: Broken Fan (1)
@@ -19712,6 +19779,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6869950579385735248, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
+      propertyPath: sceneViewId
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20033,6 +20104,10 @@ PrefabInstance:
     - target: {fileID: 4822356986221508046, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869950579385735248, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
+      propertyPath: sceneViewId
+      value: 19
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20472,7 +20547,7 @@ PrefabInstance:
       objectReference: {fileID: 2095005241}
     - target: {fileID: 7903254858322828542, guid: c1c5cf118cc1b544b9b7d9b478a26d75, type: 3}
       propertyPath: forbiddenStealLayers.m_Bits
-      value: 128
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8446283332716035530, guid: c1c5cf118cc1b544b9b7d9b478a26d75, type: 3}
       propertyPath: m_Name
@@ -20869,6 +20944,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6869950579385735248, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
+      propertyPath: sceneViewId
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21186,6 +21265,10 @@ PrefabInstance:
     - target: {fileID: 4822356986221508046, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869950579385735248, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
+      propertyPath: sceneViewId
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21862,6 +21945,7 @@ GameObject:
   - component: {fileID: 1998239230922676686}
   - component: {fileID: 2000167334529225382}
   - component: {fileID: 7342546877838570517}
+  - component: {fileID: 7354238192365039107}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -22051,6 +22135,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6869950579385735248, guid: 95cf5b7a0bea47f45b254c0fefa37018, type: 3}
+      propertyPath: sceneViewId
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22116,6 +22204,10 @@ PrefabInstance:
     - target: {fileID: 240766886264698599, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6513177201128547025, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
+      propertyPath: sceneViewId
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 7246087949137808801, guid: cd4ab720ac37833469243009b3a48d88, type: 3}
       propertyPath: m_Name
@@ -23073,6 +23165,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7583924695446340764, guid: f5a3193f7a4aaf5409f9546e3f35144b, type: 3}
+      propertyPath: sceneViewId
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -23366,7 +23462,7 @@ GameObject:
   - component: {fileID: 2764780474152362765}
   m_Layer: 5
   m_Name: InteractionText
-  m_TagString: Untagged
+  m_TagString: InteractMPText
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23402,6 +23498,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 282568329227955494}
     m_Modifications:
+    - target: {fileID: 605096849372302005, guid: e443fd0cdf2df14488e633b68bead246, type: 3}
+      propertyPath: sceneViewId
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 3119380955958772957, guid: e443fd0cdf2df14488e633b68bead246, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.433
@@ -23513,9 +23613,9 @@ MonoBehaviour:
   interactRange: 4
   cartLayer:
     serializedVersion: 2
-    m_Bits: 0
-  interactAction: {fileID: 2026494005056934852, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
-  scrollAction: {fileID: -8204589200814985267, guid: 0b7ddd374e33f4449b15de6249934a1c, type: 3}
+    m_Bits: 4294967295
+  interactAction: {fileID: 2026494005056934852, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
+  scrollAction: {fileID: -8204589200814985267, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
 --- !u!4 &4824670937797026317
 Transform:
   m_ObjectHideFlags: 0
@@ -23617,6 +23717,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7903254858322828542, guid: c1c5cf118cc1b544b9b7d9b478a26d75, type: 3}
+      propertyPath: forbiddenStealLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8446283332716035530, guid: c1c5cf118cc1b544b9b7d9b478a26d75, type: 3}
       propertyPath: m_Name
       value: antagonist
@@ -23712,6 +23816,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 282568329227955494}
     m_Modifications:
+    - target: {fileID: 4079293110811356839, guid: fef1bcf044e73aa4181fe704c564784b, type: 3}
+      propertyPath: sceneViewId
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 6114736415319599131, guid: fef1bcf044e73aa4181fe704c564784b, type: 3}
       propertyPath: m_Name
       value: Steel Cabinet
@@ -24080,22 +24188,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: disassembly table
       objectReference: {fileID: 0}
-    - target: {fileID: 1426347817322614865, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
-      propertyPath: playerCamera
-      value: 
-      objectReference: {fileID: 7354238192365039106}
-    - target: {fileID: 1426347817322614865, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
-      propertyPath: fpsController
-      value: 
-      objectReference: {fileID: 5289699065423700126}
-    - target: {fileID: 1426347817322614865, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
-      propertyPath: pickupController
-      value: 
-      objectReference: {fileID: 7342546877838570517}
-    - target: {fileID: 1426347817322614865, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
-      propertyPath: disassemblyManager
-      value: 
-      objectReference: {fileID: 1134847826}
     - target: {fileID: 2236609148032408732, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.404
@@ -24136,6 +24228,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7958703901856608263, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 7354238192365039106}
+    - target: {fileID: 7958703901856608263, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
+      propertyPath: fpsController
+      value: 
+      objectReference: {fileID: 5289699065423700126}
+    - target: {fileID: 7958703901856608263, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
+      propertyPath: pickupController
+      value: 
+      objectReference: {fileID: 7342546877838570517}
+    - target: {fileID: 7958703901856608263, guid: 91da508b344fe8640a7cdf6288dc543b, type: 3}
+      propertyPath: disassemblyManager
+      value: 
+      objectReference: {fileID: 1134847826}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -24248,6 +24356,7 @@ GameObject:
   - component: {fileID: 6126228429669306439}
   - component: {fileID: 5289699065423700126}
   - component: {fileID: 4798582436404618468}
+  - component: {fileID: 9048063155711966984}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -24799,6 +24908,29 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &7354238192365039107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2155563552992832454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7342546877838570517}
+  sceneViewId: 27
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!4 &7458122215937743008
 Transform:
   m_ObjectHideFlags: 0
@@ -25293,6 +25425,29 @@ Transform:
   - {fileID: 3345399832167708750}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9048063155711966984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553740784517426210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 5289699065423700126}
+  sceneViewId: 26
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!23 &9222083972928748520
 MeshRenderer:
   m_ObjectHideFlags: 0

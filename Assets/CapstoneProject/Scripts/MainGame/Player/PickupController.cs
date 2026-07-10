@@ -2,19 +2,18 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections.Generic;
-
 #if PHOTON_UNITY_NETWORKING
 using Photon.Pun;
 #endif
 
 #if PHOTON_UNITY_NETWORKING
+[RequireComponent(typeof(PhotonView))]
 public class PickupController : MonoBehaviourPunCallbacks, IPunObservable
 #else
 public class PickupController : MonoBehaviour
 #endif
 {
-    public static List<PickupController> ActivePickups =
-        new List<PickupController>();
+    public static List<PickupController> ActivePickups = new List<PickupController>();
 
     [Header("Pickup Settings")]
     public float pickupRange = 5f;
@@ -67,8 +66,8 @@ public class PickupController : MonoBehaviour
     private AudioSource holdAudioSource;
 
     private bool inputEnabledByThisController;
-
 #if PHOTON_UNITY_NETWORKING
+    PhotonView pv;
     private bool networkIsHoldingItem;
     private int networkHeldObjectViewID = -1;
 #endif
@@ -83,7 +82,6 @@ public class PickupController : MonoBehaviour
                 return networkIsHoldingItem;
             }
 #endif
-
             return heldObject != null;
         }
     }
@@ -96,7 +94,6 @@ public class PickupController : MonoBehaviour
             {
                 return heldObject.gameObject;
             }
-
 #if PHOTON_UNITY_NETWORKING
             if (
                 PhotonNetwork.InRoom &&
@@ -112,7 +109,6 @@ public class PickupController : MonoBehaviour
                 }
             }
 #endif
-
             return null;
         }
     }
@@ -173,12 +169,12 @@ public class PickupController : MonoBehaviour
         {
             interactionText.gameObject.SetActive(false);
         }
-
+        
         holdAudioSource = gameObject.AddComponent<AudioSource>();
         holdAudioSource.loop = true;
         holdAudioSource.playOnAwake = false;
         holdAudioSource.clip = holdSound;
-
+        pv = GetComponent<PhotonView>();
         if (holdPoint != null)
         {
             holdPoint.localPosition =
@@ -188,39 +184,42 @@ public class PickupController : MonoBehaviour
 
     void Update()
     {
-        if (!IsLocalPlayer())
+        if (pv.IsMine)
         {
-            return;
-        }
-
-        if (playerController != null && playerController.shopOpen)
-        {
-            return;
-        }
-
-        HandleRaycast();
-
-        if (heldObject != null)
-        {
-            MoveObject();
-            HandleScroll();
-
-            if (
-                interactAction != null &&
-                interactAction.action.triggered
-            )
+            if (!IsLocalPlayer())
             {
-                DropObject();
+                return;
             }
-        }
-        else
-        {
-            if (
-                interactAction != null &&
-                interactAction.action.triggered
-            )
+
+            if (playerController != null && playerController.shopOpen)
             {
-                TryPickup();
+                return;
+            }
+
+            HandleRaycast();
+
+            if (heldObject != null)
+            {
+                MoveObject();
+                HandleScroll();
+
+                if (
+                    interactAction != null &&
+                    interactAction.action.triggered
+                )
+                {
+                    DropObject();
+                }
+            }
+            else
+            {
+                if (
+                    interactAction != null &&
+                    interactAction.action.triggered
+                )
+                {
+                    TryPickup();
+                }
             }
         }
     }
@@ -264,15 +263,15 @@ public class PickupController : MonoBehaviour
     bool IsLocalPlayer()
     {
 #if PHOTON_UNITY_NETWORKING
-        if (PhotonNetwork.InRoom)
+        if (PhotonNetwork.IsConnected)
         {
-            if (photonView == null)
-                return true;
-
-            return photonView.IsMine;
+            if (PhotonNetwork.InRoom)
+            {
+                if (pv == null) { return true; }
+                else { return pv.IsMine; }
+            }
         }
 #endif
-
         return true;
     }
 
@@ -342,7 +341,6 @@ public class PickupController : MonoBehaviour
             if (rb != null)
             {
                 heldObject = rb;
-
 #if PHOTON_UNITY_NETWORKING
                 if (PhotonNetwork.InRoom)
                 {
@@ -366,7 +364,6 @@ public class PickupController : MonoBehaviour
                     }
                 }
 #endif
-
                 holdDistance = Mathf.Clamp(
                     holdDistance,
                     minHoldDistance,
@@ -623,7 +620,6 @@ public class PickupController : MonoBehaviour
         StopHoldingEffects();
 
         heldObject = null;
-
 #if PHOTON_UNITY_NETWORKING
         networkHeldObjectViewID = -1;
         networkIsHoldingItem = false;
@@ -644,7 +640,6 @@ public class PickupController : MonoBehaviour
         StopHoldingEffects();
 
         heldObject = null;
-
 #if PHOTON_UNITY_NETWORKING
         networkHeldObjectViewID = -1;
         networkIsHoldingItem = false;
@@ -655,12 +650,13 @@ public class PickupController : MonoBehaviour
         Transform thiefHoldPoint
     )
     {
-#if PHOTON_UNITY_NETWORKING
-        if (PhotonNetwork.InRoom)
+        if (PhotonNetwork.IsConnected)
         {
-            return ForceStealHeldObjectPhoton();
+            if (PhotonNetwork.InRoom)
+            {
+                return ForceStealHeldObjectPhoton();
+            }
         }
-#endif
 
         return ForceStealHeldObjectSingleplayer(
             thiefHoldPoint

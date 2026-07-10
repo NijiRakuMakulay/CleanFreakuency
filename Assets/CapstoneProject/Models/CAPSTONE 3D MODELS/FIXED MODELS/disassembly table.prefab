@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 4451890944377994476}
   - component: {fileID: 3955072292792979223}
   - component: {fileID: 6882715926423997547}
-  - component: {fileID: 1426347817322614865}
+  - component: {fileID: 7958703901856608263}
   m_Layer: 6
   m_Name: TableTrigger
   m_TagString: Untagged
@@ -358,7 +358,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1426347817322614865
+--- !u!114 &7958703901856608263
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1245214706648628889}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6355005afb9aefc4a8824664d43be7eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 4412680d18aed804b90165979e522db9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DisassemblyTable
   placePoint: {fileID: 3108920835333953252}

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6947680448552666159}
   - component: {fileID: 7107114875566030861}
   - component: {fileID: 4081934640721740586}
+  - component: {fileID: 6485734108094015683}
   m_Layer: 3
   m_Name: Steel Sheet
   m_TagString: Untagged
@@ -169,3 +170,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ObjectHighlight
   glowMaterial: {fileID: 2100000, guid: 0e8950bd7c468414eb30f231158e8079, type: 2}
+--- !u!114 &6485734108094015683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8438052776566724320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 6947680448552666159}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

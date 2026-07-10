@@ -2,7 +2,7 @@
 using TMPro;
 using System.Collections.Generic;
 
-public class ShopUI : MonoBehaviour
+public class ShopUI_MP : MonoBehaviour
 {
     public GameObject panel;
 
@@ -10,7 +10,7 @@ public class ShopUI : MonoBehaviour
     public TextMeshProUGUI itemListText;
     public TextMeshProUGUI totalValueText;
 
-    public ShopArea shopArea;
+    public ShopArea_MP shopArea;
 
     public void OpenShop(GameObject customer)
     {

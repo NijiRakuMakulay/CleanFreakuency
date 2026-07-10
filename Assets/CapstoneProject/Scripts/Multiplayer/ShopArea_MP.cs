@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class ShopArea_MP : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public class ShopArea_MP : MonoBehaviourPunCallbacks
 {
     public ShopUI_MP shopUI;
-
+    PhotonView pv;
     private List<TrashItem> itemsInside = new List<TrashItem>();
+
+    void Start() { pv = GetComponent<PhotonView>(); }
 
     void OnTriggerEnter(Collider other)
     {
@@ -47,8 +51,8 @@ public class ShopArea_MP : MonoBehaviour
 
         return itemsInside;
     }
-
-    public void SellItems()
+    [PunRPC]
+    void Sell()
     {
         int total = 0;
 

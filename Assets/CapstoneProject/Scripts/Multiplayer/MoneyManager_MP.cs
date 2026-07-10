@@ -7,10 +7,9 @@ public class MoneyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
 {
     public static MoneyManager_MP Instance;
     PhotonView pv;
-    int currentMoney = 0;
+    public int currentMoney = 0;
     int netMoney = 0;
-
-    public TextMeshProUGUI[] moneyText;
+    public TextMeshProUGUI moneyText;
 
     void Awake()
     {
@@ -41,11 +40,8 @@ public class MoneyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
 
     public void AddMoney(int amount)
     {
-        if (pv.IsMine)
-        {
-            currentMoney += amount;
-            UpdateUI();
-        }
+        currentMoney += amount;
+        UpdateUI();
     }
 
     public bool SpendMoney(int amount)
@@ -63,13 +59,8 @@ public class MoneyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
 
     void UpdateUI()
     {
-        if (moneyText != null)
-        {
-            moneyText[0].text = "₱ " + currentMoney;
-            moneyText[1].text = "₱ " + netMoney;
-            moneyText[2].text = "₱ " + netMoney;
-            moneyText[3].text = "₱ " + netMoney;
-        }
+        if (!pv.IsMine) { currentMoney = netMoney; }
+        if (moneyText != null) { moneyText.text = "₱ " + currentMoney; }
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

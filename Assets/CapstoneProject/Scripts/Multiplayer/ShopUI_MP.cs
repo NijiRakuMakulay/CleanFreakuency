@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using TMPro;
+﻿using Photon.Pun;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 
-public class ShopUI_MP : MonoBehaviour
+public class ShopUI_MP : MonoBehaviourPunCallbacks
 {
     public GameObject panel;
 
@@ -70,6 +71,12 @@ public class ShopUI_MP : MonoBehaviour
             return;
         }
 
-        shopArea.SellItems();
+        if (PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                shopArea.photonView.RPC("Sell", RpcTarget.All);
+            }
+        }
     }
 }

@@ -41,6 +41,8 @@ public class FPS_Controller : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Network sync variables")]
     private Vector3 networkPosition;
     private Quaternion networkRotation;
+    int playerCash => MoneyManager_MP.Instance.currentMoney;
+    int netPlayerCash;
 
     public override void OnEnable()
     {
@@ -185,11 +187,13 @@ public class FPS_Controller : MonoBehaviourPunCallbacks, IPunObservable
         {
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
+            stream.SendNext(playerCash);
         }
         else // Remote player → receive data
         {
             networkPosition = (Vector3)stream.ReceiveNext();
             networkRotation = (Quaternion)stream.ReceiveNext();
+            netPlayerCash = (int)stream.ReceiveNext();
         }
     }
 }

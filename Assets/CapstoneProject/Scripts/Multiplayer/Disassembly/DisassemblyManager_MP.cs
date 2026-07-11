@@ -129,35 +129,31 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
 
     void RemovePart(DisassemblyPart part)
     {
-        if (worker.IsMine)
+        if (!parts.Contains(part))
+            return;
+
+        Debug.Log("Removed: " + part.partID);
+
+        clickHistory.Add(part.partID);
+
+        parts.Remove(part);
+
+        if (part.removeVisual != null)
         {
-            if (!parts.Contains(part))
-                return;
-
-            Debug.Log("Removed: " + part.partID);
-
-            clickHistory.Add(part.partID);
-
-            parts.Remove(part);
-
-            if (part.removeVisual != null)
-            {
-                part.removeVisual.SetActive(false);
-            }
-
-            Collider col = part.GetComponent<Collider>();
-
-            if (col != null)
-            {
-                col.enabled = false;
-            }
-
-            if (parts.Count == 0)
-            {
-                FinishDisassembly();
-            }
+            part.removeVisual.SetActive(false);
         }
-        
+
+        Collider col = part.GetComponent<Collider>();
+
+        if (col != null)
+        {
+            col.enabled = false;
+        }
+
+        if (parts.Count == 0)
+        {
+            FinishDisassembly();
+        }
     }
 
     void FinishDisassembly()
@@ -199,8 +195,7 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
         if (rewardSpawnPoints == null || rewardSpawnPoints.Count == 0)
         {
             Debug.LogWarning("No reward spawn points assigned. Spawning at current object position instead.");
-
-            PhotonNetwork.Instantiate(rewardPrefab.name,currentObject.transform.position,Quaternion.identity);
+            PhotonNetwork.InstantiateRoomObject(rewardPrefab.name,currentObject.transform.position,Quaternion.identity);
             //Instantiate(rewardPrefab,currentObject.transform.position,Quaternion.identity);
 
             return;

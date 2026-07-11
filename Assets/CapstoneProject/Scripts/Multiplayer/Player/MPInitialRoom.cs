@@ -10,6 +10,12 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
 {
     [SerializeField] Transform[] NetPos;
     [SerializeField] GameObject OnlinePlayer;
+    [SerializeField] Transform[] ItemPos;
+    [SerializeField] GameObject[] ItemPrefabList;
+    [SerializeField] int[] ItemToSpawn;
+    [SerializeField] GameObject[] Enemies;
+    [SerializeField] Transform[] EnemySpawnPos;
+    [SerializeField] Transform[] EnemyRoamPos;
     PhotonView pv;
     int playerID;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,6 +32,26 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
             Debug.Log("Welcome!");
             if (PhotonNetwork.InRoom)
             {
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    int itemIndex = 0;
+                    int enemyIndex = 0;
+                    foreach (int ItemType in ItemToSpawn)
+                    {
+                        Debug.Log($"Spawning items...{itemIndex}");
+                        PhotonNetwork.InstantiateRoomObject(ItemPrefabList[ItemType].name, ItemPos[itemIndex].position, ItemPos[itemIndex].rotation);
+                        itemIndex++;
+                    }
+                    
+                    foreach (GameObject enemy in Enemies)
+                    {
+                        GameObject lightbulb;
+                        Debug.Log($"Spawning enemies...{enemyIndex}");
+                        lightbulb = PhotonNetwork.InstantiateRoomObject(enemy.name, EnemySpawnPos[enemyIndex].position, EnemySpawnPos[enemyIndex].rotation);
+                        lightbulb.GetComponent<EnemyRoamNavigator>().roamCenter = EnemyRoamPos[enemyIndex];
+                        enemyIndex++;
+                    }
+                }
                 Debug.Log(string.Format("Your game has started in room {0}!", PhotonNetwork.CurrentRoom.Name));
                 StartCoroutine(DelaySpawn());
             }

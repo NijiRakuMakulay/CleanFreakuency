@@ -92,6 +92,7 @@ public class EnemyTrashTargetScanner : MonoBehaviour
         if (cartStorageZones != null && cartStorageZones.Length > 0)
             return;
 
-        cartStorageZones = FindObjectsByType<CartStorageZone>(FindObjectsSortMode.None);
+        cartStorageZones = FindObjectsByType<CartStorageZone>();
+        //cartStorageZones = FindObjectsByType<CartStorageZone>(FindObjectsSortMode.None);
     }
 }

@@ -340,10 +340,11 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 1
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 8927451385216806308}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1121,7 +1122,7 @@ MonoBehaviour:
   interactRange: 4
   cartLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   interactAction: {fileID: 2026494005056934852, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
   scrollAction: {fileID: -8204589200814985267, guid: 02227204fcdf11c4ca9a16db1d24da47, type: 3}
 --- !u!114 &9032763628531194132

@@ -7,6 +7,7 @@ using Photon.Pun;
 [RequireComponent(typeof(EnemyTrashStealer_MP))]
 [RequireComponent(typeof(EnemyItemCarrier_MP))]
 [RequireComponent(typeof(EnemyRoamNavigator))]
+[RequireComponent(typeof(PhotonView))]
 public class EnemyTrashThiefAI_MP : MonoBehaviourPunCallbacks, IPunObservable
 {
     private enum EnemyState
@@ -42,8 +43,7 @@ public class EnemyTrashThiefAI_MP : MonoBehaviourPunCallbacks, IPunObservable
     private EnemyStealTarget currentTarget = EnemyStealTarget.None;
 
     private float carryTimer;
-    private bool initialized;
-
+    GameObject EnemyManager;
     PhotonView pv;
     [Header("Network sync variables")]
     private Vector3 networkPosition;
@@ -51,48 +51,46 @@ public class EnemyTrashThiefAI_MP : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Awake()
     {
-        pv = GetComponent<PhotonView>();
         agent = GetComponent<NavMeshAgent>();
 
-        if (targetScanner == null)
-            targetScanner = GetComponent<EnemyTrashTargetScanner>();
-
-        if (trashStealer == null)
-            trashStealer = GetComponent<EnemyTrashStealer_MP>();
-
-        if (itemCarrier == null)
-            itemCarrier = GetComponent<EnemyItemCarrier_MP>();
-
-        if (roamNavigator == null)
-            roamNavigator = GetComponent<EnemyRoamNavigator>();
-
-        initialized = ValidateComponents();
+        EnemyManager = GameObject.Find("OnlineEnemySpawner");
+        pv = GetComponent<PhotonView>();
     }
 
-    private void Start()
+    void Start()
     {
-        if (!initialized)
-            return;
-        networkPosition = transform.position;
-        networkRotation = transform.rotation;
-        if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsConnected)
         {
-            if (agent != null)
-                agent.enabled = false;
+            if (PhotonNetwork.InRoom)
+            {
+                if (agent != null)
+                {
+                    networkPosition = transform.position;
+                    networkRotation = transform.rotation;
+                    agent.enabled = true;
+                }
+                enabled = true;
+                return;
+            }
+            if (pv.IsMine)
+            {
+                StartRoaming();
+            }
+            else
+            {
+                transform.position = networkPosition;
+                transform.rotation = networkRotation;
+                //transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
+                //transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * 10f);
+            }
 
-            enabled = false;
-            return;
         }
-        StartRoaming();
     }
 
-    private void Update()
+    void Update()
     {
         if (pv.IsMine)
         {
-            if (!initialized)
-                return;
-
             if (agent == null || !agent.enabled)
                 return;
 
@@ -120,47 +118,6 @@ public class EnemyTrashThiefAI_MP : MonoBehaviourPunCallbacks, IPunObservable
             //transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
             //transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * 10f);
         }
-
-    }
-
-    private bool ValidateComponents()
-    {
-        if (agent == null)
-        {
-            Debug.LogError($"{name}: Missing NavMeshAgent.");
-            enabled = false;
-            return false;
-        }
-
-        if (targetScanner == null)
-        {
-            Debug.LogError($"{name}: Missing EnemyTrashTargetScanner.");
-            enabled = false;
-            return false;
-        }
-
-        if (trashStealer == null)
-        {
-            Debug.LogError($"{name}: Missing EnemyTrashStealer.");
-            enabled = false;
-            return false;
-        }
-
-        if (itemCarrier == null)
-        {
-            Debug.LogError($"{name}: Missing EnemyItemCarrier.");
-            enabled = false;
-            return false;
-        }
-
-        if (roamNavigator == null)
-        {
-            Debug.LogError($"{name}: Missing EnemyRoamNavigator.");
-            enabled = false;
-            return false;
-        }
-
-        return true;
     }
 
     private void RoamBehavior()
@@ -248,8 +205,7 @@ public class EnemyTrashThiefAI_MP : MonoBehaviourPunCallbacks, IPunObservable
 
     private void StartRoaming()
     {
-        if (!initialized || agent == null || roamNavigator == null)
-            return;
+        if (agent == null || roamNavigator == null) return;
 
         currentState = EnemyState.Roam;
         currentTarget = EnemyStealTarget.None;
@@ -315,7 +271,6 @@ public class EnemyTrashThiefAI_MP : MonoBehaviourPunCallbacks, IPunObservable
 
         return playerStealDistance;
     }
-
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting) // Local player → send data

@@ -3,6 +3,7 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PhotonView))]
 public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
@@ -64,8 +65,17 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.LogWarning("Someone left!");
-        //PhotonNetwork.LeaveRoom();
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 3) { Debug.Log($"{otherPlayer.NickName} has left."); }
+        if(PhotonNetwork.CurrentRoom.PlayerCount == 2){ Debug.Log($"{otherPlayer.NickName} has left. The last player left behind in the current room will automatically leave and disconnect from the server."); }
+        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.LeaveLobby();
+            PhotonNetwork.Disconnect();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            SceneManager.LoadScene("_TitleScreen");
+        }
     }
 
 

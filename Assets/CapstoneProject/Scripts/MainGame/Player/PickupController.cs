@@ -180,11 +180,12 @@ public class PickupController : MonoBehaviour
             holdPoint.localPosition =
                 new Vector3(0, 0, holdDistance);
         }
+        //interactionText = GameObject.Find("InteractionText").GetComponent<TextMeshProUGUI>();
     }
 
     void Update()
     {
-        if (pv.IsMine)
+        if (playerController.gameObject.GetComponent<PhotonView>().IsMine)
         {
             if (!IsLocalPlayer())
             {

@@ -1,4 +1,3 @@
 using UnityEngine;
-public class SpecialTrash : MonoBehaviour
-{
-}
+
+public class SpecialTrash : MonoBehaviour {}

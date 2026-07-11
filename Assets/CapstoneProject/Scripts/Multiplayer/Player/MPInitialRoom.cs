@@ -65,17 +65,13 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (PhotonNetwork.CurrentRoom.PlayerCount >= 3) { Debug.Log($"{otherPlayer.NickName} has left."); }
-        if(PhotonNetwork.CurrentRoom.PlayerCount == 2){ Debug.Log($"{otherPlayer.NickName} has left. The last player left behind in the current room will automatically leave and disconnect from the server."); }
-        if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
-        {
-            PhotonNetwork.LeaveRoom();
-            PhotonNetwork.LeaveLobby();
-            PhotonNetwork.Disconnect();
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            SceneManager.LoadScene("_TitleScreen");
-        }
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveLobby();
+        PhotonNetwork.Disconnect();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        PhotonNetwork.LocalPlayer.TagObject = null;
+        SceneManager.LoadScene("_TitleScreen");
     }
 
 

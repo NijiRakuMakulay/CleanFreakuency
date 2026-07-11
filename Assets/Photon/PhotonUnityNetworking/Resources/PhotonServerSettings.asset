@@ -41,8 +41,6 @@ MonoBehaviour:
   - RPC_ClearHeldItemBecauseStolen
   - RPC_TossItem
   - Sell
-  - CompleteDisassembly
-  - SetupDisassembly
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

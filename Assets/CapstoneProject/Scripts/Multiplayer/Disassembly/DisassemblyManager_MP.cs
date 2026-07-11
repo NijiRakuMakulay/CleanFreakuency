@@ -30,10 +30,8 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
     private List<string> clickHistory = new List<string>();
 
     private GameObject currentObject;
-    private GameObject netspobj;
 
     PhotonView worker;
-
 
     public override void OnEnable()
     {
@@ -57,6 +55,7 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
 
     public void BeginDisassembly(GameObject obj, PhotonView pv)
     {
+        Debug.Log("Disassembling...");
         worker = pv;
         currentObject = obj;
         if (worker.IsMine)
@@ -66,7 +65,6 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
             clickHistory.Clear();
             parts.AddRange( obj.GetComponentsInChildren<DisassemblyPart>() );
         }
-        photonView.RPC("SetupDisassembly", RpcTarget.All);
     }
 
     void Update()
@@ -181,20 +179,13 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
                 SpawnReward(bonusReward,spawnIndex);
                 Debug.Log("Secret reward unlocked!");
             }
-            table.EndDisassembly();
+            Debug.Log("Disassembled!");
+            
         }
-    }
-
-    [PunRPC] void SetupDisassembly()
-    {
-        netspobj = currentObject;
-    }
-
-    [PunRPC] void CompleteDisassembly()
-    {
-        Destroy(netspobj);
-        netspobj = null;
+        Destroy(currentObject);
+        currentObject = null;
         worker = null;
+        table.EndDisassembly();
     }
 
     void SpawnReward( GameObject rewardPrefab, int spawnIndex )
@@ -210,6 +201,7 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
             Debug.LogWarning("No reward spawn points assigned. Spawning at current object position instead.");
 
             PhotonNetwork.Instantiate(rewardPrefab.name,currentObject.transform.position,Quaternion.identity);
+            //Instantiate(rewardPrefab,currentObject.transform.position,Quaternion.identity);
 
             return;
         }
@@ -229,6 +221,7 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
         }
 
         GameObject spawnedReward = PhotonNetwork.Instantiate(rewardPrefab.name, spawnPoint.position,spawnPoint.rotation);
+        //GameObject spawnedReward = Instantiate(rewardPrefab, spawnPoint.position,spawnPoint.rotation);
 
         Rigidbody rb = spawnedReward.GetComponent<Rigidbody>();
 

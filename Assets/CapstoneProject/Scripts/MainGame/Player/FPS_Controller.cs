@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -107,22 +108,24 @@ public class FPS_Controller : MonoBehaviourPunCallbacks, IPunObservable
         }
         
     }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        canMove = true;
+        disassemblyMode = false;
+        shopOpen = false;
+    }
 
-    void PlayerControls()
+        void PlayerControls()
     {
         // Cursor Handling
         if (shopOpen || disassemblyMode)
         {
-            Cursor.lockState =
-                CursorLockMode.None;
-
+            Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
-            Cursor.lockState =
-                CursorLockMode.Locked;
-
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 

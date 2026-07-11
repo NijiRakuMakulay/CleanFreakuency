@@ -81,6 +81,6 @@ public class DisassemblyTable_MP : MonoBehaviourPunCallbacks
         }
         currentObject = null;
         RemoveDisassembler();
-        disassemblyManager.photonView.RPC("CompleteDisassembly", RpcTarget.All);
+        
     }
 }

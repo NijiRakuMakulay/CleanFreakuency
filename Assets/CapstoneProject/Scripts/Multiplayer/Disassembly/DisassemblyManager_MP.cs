@@ -178,16 +178,17 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
                 SpawnReward(bonusReward,spawnIndex);
                 Debug.Log("Secret reward unlocked!");
             }
+            if (PhotonNetwork.IsConnected)
+            {
+                if (PhotonNetwork.InRoom)
+                {
+                    pv.RPC("RemoveCompactTrash", RpcTarget.All);
+                }
+            }
             Debug.Log("Disassembled!");
             
         }
-        if (PhotonNetwork.IsConnected)
-        {
-            if (PhotonNetwork.InRoom)
-            {
-                pv.RPC("RemoveCompactTrash", RpcTarget.All);
-            }
-        }
+        
         //Destroy(currentObject);
         currentObject = null;
         worker = null;

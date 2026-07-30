@@ -32,6 +32,9 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
     private GameObject currentObject;
 
     PhotonView worker;
+    PhotonView pv;
+
+    void Awake() { pv = GetComponent<PhotonView>(); }
 
     public override void OnEnable()
     {
@@ -178,10 +181,22 @@ public class DisassemblyManager_MP : MonoBehaviourPunCallbacks, IPunObservable
             Debug.Log("Disassembled!");
             
         }
-        Destroy(currentObject);
+        if (PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                pv.RPC("RemoveCompactTrash", RpcTarget.All);
+            }
+        }
+        //Destroy(currentObject);
         currentObject = null;
         worker = null;
         table.EndDisassembly();
+    }
+
+    [PunRPC]void RemoveCompactTrash()
+    {
+        Destroy(currentObject);
     }
 
     void SpawnReward( GameObject rewardPrefab, int spawnIndex )

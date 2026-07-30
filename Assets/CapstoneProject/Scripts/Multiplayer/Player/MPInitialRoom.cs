@@ -13,6 +13,11 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] Transform[] ItemPos;
     [SerializeField] GameObject[] ItemPrefabList;
     [SerializeField] int[] ItemToSpawn;
+    [SerializeField] Transform[] DoorPos;
+    [SerializeField] GameObject[] DoorPrefabList;
+    [SerializeField] int[] DoorToSpawn;
+    [SerializeField] GameObject CartPrefab;
+    [SerializeField] Transform CartSpawnPos;
     [SerializeField] GameObject[] Enemies;
     [SerializeField] Transform[] EnemySpawnPos;
     [SerializeField] Transform[] EnemyRoamPos;
@@ -35,14 +40,26 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
                 if (PhotonNetwork.IsMasterClient)
                 {
                     int itemIndex = 0;
+                    int doorIndex = 0;
                     int enemyIndex = 0;
+
+                    Debug.Log($"Spawning cart...");
+                    PhotonNetwork.InstantiateRoomObject(CartPrefab.name, CartSpawnPos.position, CartSpawnPos.rotation);
+
                     foreach (int ItemType in ItemToSpawn)
                     {
                         Debug.Log($"Spawning items...{itemIndex}");
                         PhotonNetwork.InstantiateRoomObject(ItemPrefabList[ItemType].name, ItemPos[itemIndex].position, ItemPos[itemIndex].rotation);
                         itemIndex++;
                     }
-                    
+
+                    foreach (int doorType in DoorToSpawn)
+                    {
+                        Debug.Log($"Spawning doors...{doorType}");
+                        PhotonNetwork.InstantiateRoomObject(DoorPrefabList[doorType].name, DoorPos[doorIndex].position, DoorPos[doorIndex].rotation);
+                        doorIndex++;
+                    }
+
                     foreach (GameObject enemy in Enemies)
                     {
                         GameObject lightbulb;

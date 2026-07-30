@@ -45,11 +45,12 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     TextMeshProUGUI RoomLogText;
     List<string> LogList = new List<string>();
     #endregion
-
     void Awake()
     {
         CurrentRoomName = "";
         PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.NetworkingClient.LoadBalancingPeer.DisconnectTimeout = 30000;
+        PhotonNetwork.KeepAliveInBackground = 240.0f;
         PlayerID = UnityEngine.Random.Range(0, 9999999);
         username = "Player" + PlayerID;
         PhotonNetwork.NickName = username;
@@ -82,7 +83,6 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         RoomLog = GameObject.Find("RoomLog").GetComponent<ScrollRect>();
         RoomLogText = GameObject.Find("RoomLogText").GetComponent<TextMeshProUGUI>();
         #endregion
-        PhotonNetwork.AutomaticallySyncScene = true;
         PV = GetComponent<PhotonView>();
     }
 
@@ -170,7 +170,9 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                             LeaveButton.interactable = false;
                             break;
                         case 1:
-                            photonView.RPC("StartMultiplayerGame", RpcTarget.All); EntryState = 2; break;
+                            photonView.RPC("StartMultiplayerGame", RpcTarget.All);
+                            EntryState = 2;
+                            break;
                         default: break;
                     }
                 }
@@ -204,8 +206,11 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         LogList.Add("The game is about to begin!");
         RoomLog.verticalScrollbar.value = 0;
-        yield return new WaitForSeconds(3.0f);
-        PhotonNetwork.LoadLevel("Multiplayer");
+        yield return new WaitForSeconds(2.0f);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("Multiplayer");
+        }
     }
 
     public void GameStart()

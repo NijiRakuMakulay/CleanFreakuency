@@ -10516,8 +10516,8 @@ MonoBehaviour:
   - {fileID: 6755141291572508597, guid: a03e888374f2ddd47827de2f3e9eedf7, type: 3}
   - {fileID: 8907208151705202089, guid: b4b4802fdaf575043b0cdc8ac6b65933, type: 3}
   DoorToSpawn: 010000000100000000000000
-  CartPrefab: {fileID: 3943589}
-  CartSpawnPos: {fileID: 5321105266806837334, guid: d5e0e9bd2e41ffe449aa385673035504, type: 3}
+  CartPrefab: {fileID: 6617458780132427656, guid: d5e0e9bd2e41ffe449aa385673035504, type: 3}
+  CartSpawnPos: {fileID: 3943590}
   Enemies:
   - {fileID: 3188392340337184161, guid: 2a2d1170a20b13241b797bc766dc837f, type: 3}
   - {fileID: 3188392340337184161, guid: 2a2d1170a20b13241b797bc766dc837f, type: 3}
@@ -10562,11 +10562,11 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 1
-  OwnershipTransfer: 1
+  OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
   - {fileID: 958808692}
-  sceneViewId: 30
+  sceneViewId: 9
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!1001 &965533773

@@ -23,66 +23,70 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] Transform[] EnemyRoamPos;
     PhotonView pv;
     int playerID;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.NetworkingClient.LoadBalancingPeer.DisconnectTimeout = 30000;
+        PhotonNetwork.KeepAliveInBackground = 240.0f;
+        pv = GetComponent<PhotonView>();
     }
 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        pv = GetComponent<PhotonView>();
         if (PhotonNetwork.IsConnected)
         {
             Debug.Log("Welcome!");
             if (PhotonNetwork.InRoom)
             {
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    int itemIndex = 0;
-                    int doorIndex = 0;
-                    int enemyIndex = 0;
-
-                    Debug.Log($"Spawning cart...");
-                    PhotonNetwork.InstantiateRoomObject(CartPrefab.name, CartSpawnPos.position, CartSpawnPos.rotation);
-
-                    foreach (int ItemType in ItemToSpawn)
-                    {
-                        Debug.Log($"Spawning items...{itemIndex}");
-                        PhotonNetwork.InstantiateRoomObject(ItemPrefabList[ItemType].name, ItemPos[itemIndex].position, ItemPos[itemIndex].rotation);
-                        itemIndex++;
-                    }
-
-                    foreach (int doorType in DoorToSpawn)
-                    {
-                        Debug.Log($"Spawning doors...{doorType}");
-                        PhotonNetwork.InstantiateRoomObject(DoorPrefabList[doorType].name, DoorPos[doorIndex].position, DoorPos[doorIndex].rotation);
-                        doorIndex++;
-                    }
-
-                    foreach (GameObject enemy in Enemies)
-                    {
-                        GameObject lightbulb;
-                        Debug.Log($"Spawning enemies...{enemyIndex}");
-                        lightbulb = PhotonNetwork.InstantiateRoomObject(enemy.name, EnemySpawnPos[enemyIndex].position, EnemySpawnPos[enemyIndex].rotation);
-                        lightbulb.GetComponent<EnemyRoamNavigator>().roamCenter = EnemyRoamPos[enemyIndex];
-                        enemyIndex++;
-                    }
-                }
+                if (PhotonNetwork.IsMasterClient) { InitialLevelLoad(); }
                 Debug.Log(string.Format("Your game has started in room {0}!", PhotonNetwork.CurrentRoom.Name));
                 StartCoroutine(DelaySpawn());
             }
+            else
+            {
+                Debug.Log("This scene will only work when connected to Photon Network.");
+            }
         }
-        else
+    }
+    void InitialLevelLoad()
+    {
+        int itemIndex = 0;
+        int doorIndex = 0;
+        int enemyIndex = 0;
+
+        Debug.Log($"Spawning cart...");
+        PhotonNetwork.InstantiateRoomObject(CartPrefab.name, CartSpawnPos.position, CartSpawnPos.rotation);
+
+        foreach (int ItemType in ItemToSpawn)
         {
-            Debug.Log("This scene will only work when connected to Photon Network.");
+            Debug.Log($"Spawning items...{itemIndex}");
+            PhotonNetwork.InstantiateRoomObject(ItemPrefabList[ItemType].name, ItemPos[itemIndex].position, ItemPos[itemIndex].rotation);
+            itemIndex++;
+        }
+
+        foreach (int doorType in DoorToSpawn)
+        {
+            Debug.Log($"Spawning doors...{doorType}");
+            PhotonNetwork.InstantiateRoomObject(DoorPrefabList[doorType].name, DoorPos[doorIndex].position, DoorPos[doorIndex].rotation);
+            doorIndex++;
+        }
+
+        foreach (GameObject enemy in Enemies)
+        {
+            GameObject lightbulb;
+            Debug.Log($"Spawning enemies...{enemyIndex}");
+            lightbulb = PhotonNetwork.InstantiateRoomObject(enemy.name, EnemySpawnPos[enemyIndex].position, EnemySpawnPos[enemyIndex].rotation);
+            lightbulb.GetComponent<EnemyRoamNavigator>().roamCenter = EnemyRoamPos[enemyIndex];
+            enemyIndex++;
         }
     }
 
     //Initial Player goes first...
     IEnumerator DelaySpawn()
     {
-        yield return new WaitForSeconds(0.2f); // wait a frame or two
+        yield return new WaitForSeconds(0.5f); // wait 0.5 seconds
         SpawnPlayer();
         Debug.Log("Spawned player: " + playerID);
     }
@@ -90,7 +94,7 @@ public class MPInitialRoom : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

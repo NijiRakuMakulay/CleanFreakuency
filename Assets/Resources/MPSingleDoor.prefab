@@ -226,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f964bfd5406f12f428fbe1c32f46fdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MultiplayerSingleDoor
-  hingePoint: {fileID: 0}
+  hingePoint: {fileID: 7736853345246896918}
   worldHingeAxis: {x: 0, y: 1, z: 0}
   useLimits: 1
   minAngle: -100
@@ -251,7 +251,7 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 1
   OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
